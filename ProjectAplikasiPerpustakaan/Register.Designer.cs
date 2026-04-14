@@ -51,6 +51,7 @@
             this.txtNoHp.Name = "txtNoHp";
             this.txtNoHp.Size = new System.Drawing.Size(228, 26);
             this.txtNoHp.TabIndex = 35;
+            this.txtNoHp.TextChanged += new System.EventHandler(this.txtNoHp_TextChanged);
             // 
             // label8
             // 
@@ -67,6 +68,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(228, 26);
             this.txtEmail.TabIndex = 33;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // label7
             // 
@@ -83,6 +85,7 @@
             this.txtNamaLengkap.Name = "txtNamaLengkap";
             this.txtNamaLengkap.Size = new System.Drawing.Size(228, 26);
             this.txtNamaLengkap.TabIndex = 31;
+            this.txtNamaLengkap.TextChanged += new System.EventHandler(this.txtNamaLengkap_TextChanged);
             // 
             // label6
             // 
@@ -99,6 +102,7 @@
             this.txtConfirmPassword.Name = "txtConfirmPassword";
             this.txtConfirmPassword.Size = new System.Drawing.Size(228, 26);
             this.txtConfirmPassword.TabIndex = 29;
+            this.txtConfirmPassword.TextChanged += new System.EventHandler(this.txtConfirmPassword_TextChanged);
             // 
             // label5
             // 
@@ -124,6 +128,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(228, 26);
             this.txtPassword.TabIndex = 26;
+            this.txtPassword.TextChanged += new System.EventHandler(this.txtPassword_TextChanged);
             // 
             // txtUsername
             // 
@@ -131,6 +136,7 @@
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(228, 26);
             this.txtUsername.TabIndex = 25;
+            this.txtUsername.TextChanged += new System.EventHandler(this.txtUsername_TextChanged);
             // 
             // label4
             // 
@@ -192,6 +198,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Register";
             this.Text = "Register";
+            this.Load += new System.EventHandler(this.Register_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
