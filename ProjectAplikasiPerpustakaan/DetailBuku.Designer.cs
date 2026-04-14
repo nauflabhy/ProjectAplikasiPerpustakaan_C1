@@ -67,6 +67,7 @@
             this.lblLokasi.Size = new System.Drawing.Size(55, 20);
             this.lblLokasi.TabIndex = 69;
             this.lblLokasi.Text = "Lokasi";
+            this.lblLokasi.Click += new System.EventHandler(this.lblLokasi_Click);
             // 
             // label8
             // 
@@ -85,6 +86,7 @@
             this.lblStokTersedia.Size = new System.Drawing.Size(103, 20);
             this.lblStokTersedia.TabIndex = 67;
             this.lblStokTersedia.Text = "StokTersedia";
+            this.lblStokTersedia.Click += new System.EventHandler(this.lblStokTersedia_Click);
             // 
             // lblJudul
             // 
@@ -94,6 +96,7 @@
             this.lblJudul.Size = new System.Drawing.Size(88, 20);
             this.lblJudul.TabIndex = 66;
             this.lblJudul.Text = "JudulBuku:";
+            this.lblJudul.Click += new System.EventHandler(this.lblJudul_Click);
             // 
             // lblKodeBuku
             // 
@@ -103,6 +106,7 @@
             this.lblKodeBuku.Size = new System.Drawing.Size(87, 20);
             this.lblKodeBuku.TabIndex = 65;
             this.lblKodeBuku.Text = "KodeBuku:";
+            this.lblKodeBuku.Click += new System.EventHandler(this.lblKodeBuku_Click);
             // 
             // lblStokTotal
             // 
@@ -112,6 +116,7 @@
             this.lblStokTotal.Size = new System.Drawing.Size(77, 20);
             this.lblStokTotal.TabIndex = 64;
             this.lblStokTotal.Text = "StokTotal";
+            this.lblStokTotal.Click += new System.EventHandler(this.lblStokTotal_Click);
             // 
             // lblKategori
             // 
@@ -121,6 +126,7 @@
             this.lblKategori.Size = new System.Drawing.Size(68, 20);
             this.lblKategori.TabIndex = 63;
             this.lblKategori.Text = "Kategori";
+            this.lblKategori.Click += new System.EventHandler(this.lblKategori_Click);
             // 
             // lblPengarang
             // 
@@ -130,6 +136,7 @@
             this.lblPengarang.Size = new System.Drawing.Size(87, 20);
             this.lblPengarang.TabIndex = 62;
             this.lblPengarang.Text = "Pengarang";
+            this.lblPengarang.Click += new System.EventHandler(this.lblPengarang_Click);
             // 
             // lblTahunTerbit
             // 
@@ -139,6 +146,7 @@
             this.lblTahunTerbit.Size = new System.Drawing.Size(94, 20);
             this.lblTahunTerbit.TabIndex = 61;
             this.lblTahunTerbit.Text = "TahunTerbit";
+            this.lblTahunTerbit.Click += new System.EventHandler(this.lblTahunTerbit_Click);
             // 
             // lblPenerbit
             // 
@@ -148,6 +156,7 @@
             this.lblPenerbit.Size = new System.Drawing.Size(68, 20);
             this.lblPenerbit.TabIndex = 60;
             this.lblPenerbit.Text = "Penerbit";
+            this.lblPenerbit.Click += new System.EventHandler(this.lblPenerbit_Click);
             // 
             // label14
             // 
@@ -258,6 +267,7 @@
             this.Controls.Add(this.label1);
             this.Name = "DetailBuku";
             this.Text = "DetailBuku";
+            this.Load += new System.EventHandler(this.DetailBuku_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
