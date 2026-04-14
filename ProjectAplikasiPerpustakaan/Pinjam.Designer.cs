@@ -48,55 +48,50 @@
             // lblJudul
             // 
             this.lblJudul.AutoSize = true;
-            this.lblJudul.Location = new System.Drawing.Point(1092, 185);
+            this.lblJudul.Location = new System.Drawing.Point(1111, 180);
             this.lblJudul.Name = "lblJudul";
             this.lblJudul.Size = new System.Drawing.Size(84, 20);
             this.lblJudul.TabIndex = 36;
             this.lblJudul.Text = "JudulBuku";
-            this.lblJudul.Click += new System.EventHandler(this.lblJudul_Click);
             // 
             // lblKodeBuku
             // 
             this.lblKodeBuku.AutoSize = true;
-            this.lblKodeBuku.Location = new System.Drawing.Point(878, 185);
+            this.lblKodeBuku.Location = new System.Drawing.Point(897, 180);
             this.lblKodeBuku.Name = "lblKodeBuku";
             this.lblKodeBuku.Size = new System.Drawing.Size(83, 20);
             this.lblKodeBuku.TabIndex = 35;
             this.lblKodeBuku.Text = "KodeBuku";
-            this.lblKodeBuku.Click += new System.EventHandler(this.lblKodeBuku_Click);
             // 
             // btnKembali
             // 
-            this.btnKembali.Location = new System.Drawing.Point(839, 537);
+            this.btnKembali.Location = new System.Drawing.Point(858, 532);
             this.btnKembali.Name = "btnKembali";
             this.btnKembali.Size = new System.Drawing.Size(165, 49);
             this.btnKembali.TabIndex = 34;
             this.btnKembali.Text = "Kembali";
             this.btnKembali.UseVisualStyleBackColor = true;
-            this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click);
             // 
             // btnAjukanPeminjaman
             // 
-            this.btnAjukanPeminjaman.Location = new System.Drawing.Point(1086, 537);
+            this.btnAjukanPeminjaman.Location = new System.Drawing.Point(1105, 532);
             this.btnAjukanPeminjaman.Name = "btnAjukanPeminjaman";
             this.btnAjukanPeminjaman.Size = new System.Drawing.Size(169, 49);
             this.btnAjukanPeminjaman.TabIndex = 33;
             this.btnAjukanPeminjaman.Text = "Ajukan Peminjaman";
             this.btnAjukanPeminjaman.UseVisualStyleBackColor = true;
-            this.btnAjukanPeminjaman.Click += new System.EventHandler(this.btnAjukanPeminjaman_Click);
             // 
             // txtPerguruan
             // 
-            this.txtPerguruan.Location = new System.Drawing.Point(1005, 458);
+            this.txtPerguruan.Location = new System.Drawing.Point(1024, 453);
             this.txtPerguruan.Name = "txtPerguruan";
             this.txtPerguruan.Size = new System.Drawing.Size(231, 26);
             this.txtPerguruan.TabIndex = 32;
-            this.txtPerguruan.TextChanged += new System.EventHandler(this.txtPerguruan_TextChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(838, 461);
+            this.label7.Location = new System.Drawing.Point(857, 456);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(145, 20);
             this.label7.TabIndex = 31;
@@ -104,40 +99,36 @@
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(1005, 408);
+            this.txtEmail.Location = new System.Drawing.Point(1024, 403);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(231, 26);
             this.txtEmail.TabIndex = 30;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // txtNoHp
             // 
-            this.txtNoHp.Location = new System.Drawing.Point(1005, 359);
+            this.txtNoHp.Location = new System.Drawing.Point(1024, 354);
             this.txtNoHp.Name = "txtNoHp";
             this.txtNoHp.Size = new System.Drawing.Size(231, 26);
             this.txtNoHp.TabIndex = 29;
-            this.txtNoHp.TextChanged += new System.EventHandler(this.txtNoHp_TextChanged);
             // 
             // txtNamaLengkap
             // 
-            this.txtNamaLengkap.Location = new System.Drawing.Point(1005, 309);
+            this.txtNamaLengkap.Location = new System.Drawing.Point(1024, 304);
             this.txtNamaLengkap.Name = "txtNamaLengkap";
             this.txtNamaLengkap.Size = new System.Drawing.Size(231, 26);
             this.txtNamaLengkap.TabIndex = 28;
-            this.txtNamaLengkap.TextChanged += new System.EventHandler(this.txtNamaLengkap_TextChanged);
             // 
             // txtNIK
             // 
-            this.txtNIK.Location = new System.Drawing.Point(1005, 262);
+            this.txtNIK.Location = new System.Drawing.Point(1024, 257);
             this.txtNIK.Name = "txtNIK";
             this.txtNIK.Size = new System.Drawing.Size(231, 26);
             this.txtNIK.TabIndex = 27;
-            this.txtNIK.TextChanged += new System.EventHandler(this.txtNIK_TextChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(838, 408);
+            this.label5.Location = new System.Drawing.Point(857, 403);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(48, 20);
             this.label5.TabIndex = 26;
@@ -146,7 +137,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(838, 265);
+            this.label4.Location = new System.Drawing.Point(857, 260);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 20);
             this.label4.TabIndex = 25;
@@ -155,7 +146,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(838, 359);
+            this.label3.Location = new System.Drawing.Point(857, 354);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(54, 20);
             this.label3.TabIndex = 24;
@@ -164,7 +155,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(838, 309);
+            this.label1.Location = new System.Drawing.Point(857, 304);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(117, 20);
             this.label1.TabIndex = 23;
@@ -174,7 +165,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(882, 111);
+            this.label2.Location = new System.Drawing.Point(901, 106);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(294, 32);
             this.label2.TabIndex = 22;
@@ -184,7 +175,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1822, 830);
+            this.ClientSize = new System.Drawing.Size(1828, 829);
             this.Controls.Add(this.lblJudul);
             this.Controls.Add(this.lblKodeBuku);
             this.Controls.Add(this.btnKembali);
