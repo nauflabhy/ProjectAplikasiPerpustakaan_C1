@@ -53,6 +53,7 @@
             this.lblJudul.Size = new System.Drawing.Size(84, 20);
             this.lblJudul.TabIndex = 36;
             this.lblJudul.Text = "JudulBuku";
+            this.lblJudul.Click += new System.EventHandler(this.lblJudul_Click);
             // 
             // lblKodeBuku
             // 
@@ -62,6 +63,7 @@
             this.lblKodeBuku.Size = new System.Drawing.Size(83, 20);
             this.lblKodeBuku.TabIndex = 35;
             this.lblKodeBuku.Text = "KodeBuku";
+            this.lblKodeBuku.Click += new System.EventHandler(this.lblKodeBuku_Click);
             // 
             // btnKembali
             // 
@@ -71,6 +73,7 @@
             this.btnKembali.TabIndex = 34;
             this.btnKembali.Text = "Kembali";
             this.btnKembali.UseVisualStyleBackColor = true;
+            this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click);
             // 
             // btnAjukanPeminjaman
             // 
@@ -80,6 +83,7 @@
             this.btnAjukanPeminjaman.TabIndex = 33;
             this.btnAjukanPeminjaman.Text = "Ajukan Peminjaman";
             this.btnAjukanPeminjaman.UseVisualStyleBackColor = true;
+            this.btnAjukanPeminjaman.Click += new System.EventHandler(this.btnAjukanPeminjaman_Click);
             // 
             // txtPerguruan
             // 
@@ -87,6 +91,7 @@
             this.txtPerguruan.Name = "txtPerguruan";
             this.txtPerguruan.Size = new System.Drawing.Size(231, 26);
             this.txtPerguruan.TabIndex = 32;
+            this.txtPerguruan.TextChanged += new System.EventHandler(this.txtPerguruan_TextChanged);
             // 
             // label7
             // 
@@ -103,6 +108,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(231, 26);
             this.txtEmail.TabIndex = 30;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // txtNoHp
             // 
@@ -110,6 +116,7 @@
             this.txtNoHp.Name = "txtNoHp";
             this.txtNoHp.Size = new System.Drawing.Size(231, 26);
             this.txtNoHp.TabIndex = 29;
+            this.txtNoHp.TextChanged += new System.EventHandler(this.txtNoHp_TextChanged);
             // 
             // txtNamaLengkap
             // 
@@ -117,6 +124,7 @@
             this.txtNamaLengkap.Name = "txtNamaLengkap";
             this.txtNamaLengkap.Size = new System.Drawing.Size(231, 26);
             this.txtNamaLengkap.TabIndex = 28;
+            this.txtNamaLengkap.TextChanged += new System.EventHandler(this.txtNamaLengkap_TextChanged);
             // 
             // txtNIK
             // 
@@ -124,6 +132,7 @@
             this.txtNIK.Name = "txtNIK";
             this.txtNIK.Size = new System.Drawing.Size(231, 26);
             this.txtNIK.TabIndex = 27;
+            this.txtNIK.TextChanged += new System.EventHandler(this.txtNIK_TextChanged);
             // 
             // label5
             // 
@@ -193,6 +202,7 @@
             this.Controls.Add(this.label2);
             this.Name = "Pinjam";
             this.Text = "Pinjam";
+            this.Load += new System.EventHandler(this.Pinjam_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
