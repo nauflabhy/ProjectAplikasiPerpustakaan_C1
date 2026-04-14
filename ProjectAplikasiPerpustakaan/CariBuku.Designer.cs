@@ -48,6 +48,7 @@
             this.btnBukuDipinjam.TabIndex = 17;
             this.btnBukuDipinjam.Text = "Buku yang dipinjam";
             this.btnBukuDipinjam.UseVisualStyleBackColor = true;
+            this.btnBukuDipinjam.Click += new System.EventHandler(this.btnBukuDipinjam_Click);
             // 
             // btnCari
             // 
@@ -73,6 +74,7 @@
             this.txtCariBuku.Name = "txtCariBuku";
             this.txtCariBuku.Size = new System.Drawing.Size(514, 26);
             this.txtCariBuku.TabIndex = 14;
+            this.txtCariBuku.TextChanged += new System.EventHandler(this.txtCariBuku_TextChanged);
             // 
             // btnKembalikan
             // 
@@ -82,6 +84,7 @@
             this.btnKembalikan.TabIndex = 13;
             this.btnKembalikan.Text = "Kembalikan Buku";
             this.btnKembalikan.UseVisualStyleBackColor = true;
+            this.btnKembalikan.Click += new System.EventHandler(this.btnKembalikan_Click);
             // 
             // btnPinjam
             // 
@@ -91,6 +94,7 @@
             this.btnPinjam.TabIndex = 12;
             this.btnPinjam.Text = "Pinjam Buku";
             this.btnPinjam.UseVisualStyleBackColor = true;
+            this.btnPinjam.Click += new System.EventHandler(this.btnPinjam_Click);
             // 
             // btnDetailBuku
             // 
@@ -100,6 +104,7 @@
             this.btnDetailBuku.TabIndex = 11;
             this.btnDetailBuku.Text = "Detail Buku";
             this.btnDetailBuku.UseVisualStyleBackColor = true;
+            this.btnDetailBuku.Click += new System.EventHandler(this.btnDetailBuku_Click);
             // 
             // btnConnect
             // 
@@ -109,6 +114,7 @@
             this.btnConnect.TabIndex = 10;
             this.btnConnect.Text = "Load Koneksi";
             this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // dataGridView1
             // 
@@ -119,6 +125,7 @@
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(1747, 508);
             this.dataGridView1.TabIndex = 9;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // CariBuku
             // 
