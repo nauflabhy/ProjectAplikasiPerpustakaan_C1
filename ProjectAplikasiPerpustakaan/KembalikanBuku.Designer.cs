@@ -72,6 +72,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "KembalikanBuku";
             this.Text = "KembalikanBuku";
+            this.Load += new System.EventHandler(this.KembalikanBuku_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
