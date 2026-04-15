@@ -34,7 +34,7 @@
             this.btnDaftarPengajuan = new System.Windows.Forms.Button();
             this.btnPengguna = new System.Windows.Forms.Button();
             this.btnEditBuku = new System.Windows.Forms.Button();
-            this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnLoadDatabase = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.btnLaporan = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -73,7 +73,7 @@
             // 
             // btnDaftarPengajuan
             // 
-            this.btnDaftarPengajuan.Location = new System.Drawing.Point(160, 725);
+            this.btnDaftarPengajuan.Location = new System.Drawing.Point(246, 730);
             this.btnDaftarPengajuan.Name = "btnDaftarPengajuan";
             this.btnDaftarPengajuan.Size = new System.Drawing.Size(183, 65);
             this.btnDaftarPengajuan.TabIndex = 3;
@@ -83,7 +83,7 @@
             // 
             // btnPengguna
             // 
-            this.btnPengguna.Location = new System.Drawing.Point(401, 725);
+            this.btnPengguna.Location = new System.Drawing.Point(487, 730);
             this.btnPengguna.Name = "btnPengguna";
             this.btnPengguna.Size = new System.Drawing.Size(183, 65);
             this.btnPengguna.TabIndex = 4;
@@ -93,7 +93,7 @@
             // 
             // btnEditBuku
             // 
-            this.btnEditBuku.Location = new System.Drawing.Point(651, 725);
+            this.btnEditBuku.Location = new System.Drawing.Point(722, 730);
             this.btnEditBuku.Name = "btnEditBuku";
             this.btnEditBuku.Size = new System.Drawing.Size(183, 65);
             this.btnEditBuku.TabIndex = 5;
@@ -101,15 +101,15 @@
             this.btnEditBuku.UseVisualStyleBackColor = true;
             this.btnEditBuku.Click += new System.EventHandler(this.btnEditBuku_Click);
             // 
-            // btnRefresh
+            // btnLoadDatabase
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(1052, 725);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(147, 65);
-            this.btnRefresh.TabIndex = 6;
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.btnLoadDatabase.Location = new System.Drawing.Point(52, 730);
+            this.btnLoadDatabase.Name = "btnLoadDatabase";
+            this.btnLoadDatabase.Size = new System.Drawing.Size(147, 65);
+            this.btnLoadDatabase.TabIndex = 6;
+            this.btnLoadDatabase.Text = "Load Database";
+            this.btnLoadDatabase.UseVisualStyleBackColor = true;
+            this.btnLoadDatabase.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // button1
             // 
@@ -122,7 +122,7 @@
             // 
             // btnLaporan
             // 
-            this.btnLaporan.Location = new System.Drawing.Point(859, 725);
+            this.btnLaporan.Location = new System.Drawing.Point(945, 730);
             this.btnLaporan.Name = "btnLaporan";
             this.btnLaporan.Size = new System.Drawing.Size(161, 65);
             this.btnLaporan.TabIndex = 8;
@@ -137,7 +137,7 @@
             this.ClientSize = new System.Drawing.Size(1735, 830);
             this.Controls.Add(this.btnLaporan);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.btnLoadDatabase);
             this.Controls.Add(this.btnEditBuku);
             this.Controls.Add(this.btnPengguna);
             this.Controls.Add(this.btnDaftarPengajuan);
@@ -161,7 +161,7 @@
         private System.Windows.Forms.Button btnDaftarPengajuan;
         private System.Windows.Forms.Button btnPengguna;
         private System.Windows.Forms.Button btnEditBuku;
-        private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnLoadDatabase;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnLaporan;
     }

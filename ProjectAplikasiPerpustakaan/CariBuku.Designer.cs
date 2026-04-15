@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btnConnect = new System.Windows.Forms.Button();
             this.btnDetailBuku = new System.Windows.Forms.Button();
             this.btnPinjam = new System.Windows.Forms.Button();
             this.btnKembalikan = new System.Windows.Forms.Button();
@@ -52,19 +51,9 @@
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
-            // btnConnect
-            // 
-            this.btnConnect.Location = new System.Drawing.Point(62, 723);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(149, 67);
-            this.btnConnect.TabIndex = 1;
-            this.btnConnect.Text = "Load Koneksi";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
             // btnDetailBuku
             // 
-            this.btnDetailBuku.Location = new System.Drawing.Point(247, 723);
+            this.btnDetailBuku.Location = new System.Drawing.Point(62, 719);
             this.btnDetailBuku.Name = "btnDetailBuku";
             this.btnDetailBuku.Size = new System.Drawing.Size(149, 68);
             this.btnDetailBuku.TabIndex = 2;
@@ -74,7 +63,7 @@
             // 
             // btnPinjam
             // 
-            this.btnPinjam.Location = new System.Drawing.Point(435, 727);
+            this.btnPinjam.Location = new System.Drawing.Point(250, 723);
             this.btnPinjam.Name = "btnPinjam";
             this.btnPinjam.Size = new System.Drawing.Size(149, 59);
             this.btnPinjam.TabIndex = 3;
@@ -84,7 +73,7 @@
             // 
             // btnKembalikan
             // 
-            this.btnKembalikan.Location = new System.Drawing.Point(624, 727);
+            this.btnKembalikan.Location = new System.Drawing.Point(439, 723);
             this.btnKembalikan.Name = "btnKembalikan";
             this.btnKembalikan.Size = new System.Drawing.Size(149, 59);
             this.btnKembalikan.TabIndex = 4;
@@ -121,7 +110,7 @@
             // 
             // btnBukuDipinjam
             // 
-            this.btnBukuDipinjam.Location = new System.Drawing.Point(802, 727);
+            this.btnBukuDipinjam.Location = new System.Drawing.Point(617, 723);
             this.btnBukuDipinjam.Name = "btnBukuDipinjam";
             this.btnBukuDipinjam.Size = new System.Drawing.Size(149, 59);
             this.btnBukuDipinjam.TabIndex = 8;
@@ -152,7 +141,6 @@
             this.Controls.Add(this.btnKembalikan);
             this.Controls.Add(this.btnPinjam);
             this.Controls.Add(this.btnDetailBuku);
-            this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.dataGridView1);
             this.Name = "CariBuku";
             this.Text = "Form2";
@@ -166,7 +154,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnDetailBuku;
         private System.Windows.Forms.Button btnPinjam;
         private System.Windows.Forms.Button btnKembalikan;

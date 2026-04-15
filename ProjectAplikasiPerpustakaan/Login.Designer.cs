@@ -46,7 +46,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(969, 356);
+            this.label1.Location = new System.Drawing.Point(982, 236);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 32);
             this.label1.TabIndex = 0;
@@ -56,7 +56,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(752, 287);
+            this.label2.Location = new System.Drawing.Point(765, 167);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(504, 32);
             this.label2.TabIndex = 1;
@@ -65,7 +65,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(790, 456);
+            this.label3.Location = new System.Drawing.Point(803, 336);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 20);
             this.label3.TabIndex = 2;
@@ -74,7 +74,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(790, 523);
+            this.label4.Location = new System.Drawing.Point(803, 403);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 20);
             this.label4.TabIndex = 3;
@@ -82,7 +82,7 @@
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(925, 456);
+            this.txtUsername.Location = new System.Drawing.Point(938, 336);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(228, 26);
             this.txtUsername.TabIndex = 4;
@@ -90,7 +90,7 @@
             // 
             // textPassword
             // 
-            this.textPassword.Location = new System.Drawing.Point(925, 523);
+            this.textPassword.Location = new System.Drawing.Point(938, 403);
             this.textPassword.Name = "textPassword";
             this.textPassword.Size = new System.Drawing.Size(228, 26);
             this.textPassword.TabIndex = 5;
@@ -98,12 +98,14 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(962, 607);
+            this.btnLogin.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnLogin.Cursor = System.Windows.Forms.Cursors.AppStarting;
+            this.btnLogin.Location = new System.Drawing.Point(979, 487);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(109, 51);
             this.btnLogin.TabIndex = 6;
             this.btnLogin.Text = "Masuk";
-            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // fileSystemWatcher1
@@ -114,7 +116,7 @@
             // btnRegister
             // 
             this.btnRegister.AutoSize = true;
-            this.btnRegister.Location = new System.Drawing.Point(973, 572);
+            this.btnRegister.Location = new System.Drawing.Point(997, 448);
             this.btnRegister.Name = "btnRegister";
             this.btnRegister.Size = new System.Drawing.Size(69, 20);
             this.btnRegister.TabIndex = 7;
@@ -132,6 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1805, 827);
             this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.btnLogin);

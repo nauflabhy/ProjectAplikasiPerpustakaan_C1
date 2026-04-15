@@ -42,7 +42,7 @@
             this.btnKembalikan = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.txtCatatan = new System.Windows.Forms.TextBox();
-            this.lblPengembalian = new System.Windows.Forms.Label();
+            this.lblTanggalPengembalian = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -103,6 +103,11 @@
             // cmbKondisiBuku
             // 
             this.cmbKondisiBuku.FormattingEnabled = true;
+            this.cmbKondisiBuku.Items.AddRange(new object[] {
+            "baik",
+            "rusak ringan",
+            "rusak berat",
+            "hilang"});
             this.cmbKondisiBuku.Location = new System.Drawing.Point(981, 367);
             this.cmbKondisiBuku.Name = "cmbKondisiBuku";
             this.cmbKondisiBuku.Size = new System.Drawing.Size(121, 28);
@@ -154,6 +159,7 @@
             this.btnKembalikan.TabIndex = 12;
             this.btnKembalikan.Text = "Kembalikan";
             this.btnKembalikan.UseVisualStyleBackColor = true;
+            this.btnKembalikan.Click += new System.EventHandler(this.btnKembalikan_Click_1);
             // 
             // label7
             // 
@@ -173,21 +179,21 @@
             this.txtCatatan.TabIndex = 14;
             this.txtCatatan.TextChanged += new System.EventHandler(this.txtCatatan_TextChanged);
             // 
-            // lblPengembalian
+            // lblTanggalPengembalian
             // 
-            this.lblPengembalian.AutoSize = true;
-            this.lblPengembalian.Location = new System.Drawing.Point(977, 316);
-            this.lblPengembalian.Name = "lblPengembalian";
-            this.lblPengembalian.Size = new System.Drawing.Size(171, 20);
-            this.lblPengembalian.TabIndex = 15;
-            this.lblPengembalian.Text = "Tanggal Pengembalian";
+            this.lblTanggalPengembalian.AutoSize = true;
+            this.lblTanggalPengembalian.Location = new System.Drawing.Point(977, 316);
+            this.lblTanggalPengembalian.Name = "lblTanggalPengembalian";
+            this.lblTanggalPengembalian.Size = new System.Drawing.Size(171, 20);
+            this.lblTanggalPengembalian.TabIndex = 15;
+            this.lblTanggalPengembalian.Text = "Tanggal Pengembalian";
             // 
             // FormPengembalian
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1800, 828);
-            this.Controls.Add(this.lblPengembalian);
+            this.Controls.Add(this.lblTanggalPengembalian);
             this.Controls.Add(this.txtCatatan);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.btnKembalikan);
@@ -204,7 +210,7 @@
             this.Controls.Add(this.label1);
             this.Name = "FormPengembalian";
             this.Text = "FormPengembalian";
-            this.Load += new System.EventHandler(this.FormPengembalian_Load_1);
+            this.Load += new System.EventHandler(this.FormPengembalian_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,6 +232,6 @@
         private System.Windows.Forms.Button btnKembalikan;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtCatatan;
-        private System.Windows.Forms.Label lblPengembalian;
+        private System.Windows.Forms.Label lblTanggalPengembalian;
     }
 }

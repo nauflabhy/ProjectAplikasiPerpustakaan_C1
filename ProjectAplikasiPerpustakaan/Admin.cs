@@ -101,7 +101,24 @@ namespace ProjectAplikasiPerpustakaan
         // Tombol Refresh Daftar Buku
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            LoadDataBuku();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    MessageBox.Show("✅ Koneksi ke Database BERHASIL!\n\n" +
+                                  "Server: " + conn.DataSource + "\n" +
+                                  "Database: " + conn.Database,
+                                  "Koneksi Berhasil",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Gagal terhubung ke database:\n" + ex.Message,
+                    "Koneksi Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnLogout_Click(object sender, EventArgs e)

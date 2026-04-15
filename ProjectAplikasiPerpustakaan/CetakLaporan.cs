@@ -18,139 +18,112 @@ namespace ProjectAplikasiPerpustakaan
             InitializeComponent();
         }
 
+        // ================== FORM LOAD ==================
         private void CetakLaporan_Load(object sender, EventArgs e)
         {
-            SetupDataGridView();
-            LoadCombinedReport();           // Ganti ke method baru
+            LoadDataLaporan();
         }
 
-        // ================== SETUP DATAGRIDVIEW ==================
-        private void SetupDataGridView()
+        // ================== LOAD DATA DARI TABEL LAPORAN ==================
+        private void LoadDataLaporan()
         {
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.ReadOnly = true;
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.MultiSelect = false;
-            dataGridView1.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
-            dataGridView1.RowHeadersVisible = false;
-        }
-
-        // ================== LOAD DATA LAPORAN + PENGEMBALIAN ==================
-        private void LoadCombinedReport(string periodeFilter = "")
-        {
-            string query = @"
-        SELECT 
-            L.id_laporan,
-            L.periode,
-            L.total_kunjungan AS [Total Kunjungan],
-            L.total_peminjaman AS [Total Peminjaman],
-            L.total_pengembalian AS [Total Pengembalian],
-            L.total_denda AS [Total Denda (Summary)],
-            ISNULL(SUM(P.denda), 0) AS [Total Denda Aktual],
-            COUNT(P.id_pengembalian) AS [Jumlah Pengembalian Detail],
-            MAX(P.tanggal_kembali) AS [Pengembalian Terakhir],
-            L.generated_at AS [Tanggal Dibuat]
-        FROM LAPORAN L
-        LEFT JOIN PENGEMBALIAN P ON P.id_peminjaman IN 
-            (SELECT id_peminjaman FROM PEMINJAMAN)  -- Safety join
-        LEFT JOIN PEMINJAMAN PM ON PM.id_peminjaman = P.id_peminjaman
-        WHERE (@periode = '' OR L.periode = @periode)
-        GROUP BY 
-            L.id_laporan, L.periode, L.total_kunjungan, 
-            L.total_peminjaman, L.total_pengembalian, 
-            L.total_denda, L.generated_at
-        ORDER BY L.periode DESC, L.generated_at DESC";
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                 {
-                    cmd.Parameters.AddWithValue("@periode", periodeFilter);
+                    conn.Open();
 
-                    dtLaporan = new DataTable();
-                    da.Fill(dtLaporan);
+                    string query = @"
+                        SELECT 
+                            id_laporan,
+                            periode,
+                            total_kunjungan,
+                            total_peminjaman,
+                            total_pengembalian,
+                            total_denda,
+                            generated_at,
+                            (SELECT username FROM Pengguna p 
+                             JOIN ADMIN a ON p.id_user = a.id_user 
+                             WHERE a.id_admin = LAPORAN.id_admin) AS nama_admin
+                        FROM LAPORAN
+                        ORDER BY generated_at DESC;";
 
-                    dataGridView1.DataSource = dtLaporan;
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(query, conn))
+                    {
+                        dtLaporan = new DataTable();
+                        adapter.Fill(dtLaporan);
 
-                    // Sembunyikan ID
-                    if (dataGridView1.Columns["id_laporan"] != null)
-                        dataGridView1.Columns["id_laporan"].Visible = false;
+                        // Tampilkan di DataGridView
+                        dgvLaporan.DataSource = dtLaporan;
 
-                    FormatGridColumns();
+                        // Atur tampilan kolom agar lebih rapi
+                        if (dgvLaporan.Columns.Count > 0)
+                        {
+                            dgvLaporan.Columns["id_laporan"].HeaderText = "ID Laporan";
+                            dgvLaporan.Columns["periode"].HeaderText = "Periode";
+                            dgvLaporan.Columns["total_kunjungan"].HeaderText = "Total Kunjungan";
+                            dgvLaporan.Columns["total_peminjaman"].HeaderText = "Total Peminjaman";
+                            dgvLaporan.Columns["total_pengembalian"].HeaderText = "Total Pengembalian";
+                            dgvLaporan.Columns["total_denda"].HeaderText = "Total Denda (Rp)";
+                            dgvLaporan.Columns["generated_at"].HeaderText = "Tanggal Dibuat";
+                            dgvLaporan.Columns["nama_admin"].HeaderText = "Dibuat Oleh";
+
+                            // Format kolom denda menjadi mata uang
+                            dgvLaporan.Columns["total_denda"].DefaultCellStyle.Format = "N0";
+                            dgvLaporan.Columns["total_denda"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                            dgvLaporan.Columns["generated_at"].DefaultCellStyle.Format = "dd MMMM yyyy HH:mm";
+                        }
+
+                        // Jika tidak ada data
+                        if (dtLaporan.Rows.Count == 0)
+                        {
+                            MessageBox.Show("Belum ada data laporan yang tersedia.", "Informasi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
                 }
-
-                this.Text = $"Cetak Laporan - {dtLaporan.Rows.Count} Data";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat data laporan:\n" + ex.Message,
-                    "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Terjadi kesalahan saat memuat data laporan:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void FormatGridColumns()
+
+        // ================== TOMBOL CETAK / EXPORT (Opsional) ==================
+
+
+        // ================== TOMBOL TUTUP ==================
+        private void btnTutup_Click(object sender, EventArgs e)
         {
-            // Format Rupiah
-            var colDendaSummary = dataGridView1.Columns["Total Denda (Summary)"];
-            var colDendaAktual = dataGridView1.Columns["Total Denda Aktual"];
-
-            if (colDendaSummary != null)
-            {
-                colDendaSummary.DefaultCellStyle.Format = "N0";
-                colDendaSummary.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            }
-
-            if (colDendaAktual != null)
-            {
-                colDendaAktual.DefaultCellStyle.Format = "N0";
-                colDendaAktual.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            }
-
-            // Format angka tengah
-            string[] kolomAngka = { "Total Kunjungan", "Total Peminjaman", "Total Pengembalian", "Jumlah Pengembalian Detail" };
-            foreach (string kolom in kolomAngka)
-            {
-                if (dataGridView1.Columns[kolom] != null)
-                {
-                    dataGridView1.Columns[kolom].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                }
-            }
-
-            // Format tanggal
-            if (dataGridView1.Columns["Tanggal Dibuat"] != null)
-                dataGridView1.Columns["Tanggal Dibuat"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-
-            if (dataGridView1.Columns["Pengembalian Terakhir"] != null)
-                dataGridView1.Columns["Pengembalian Terakhir"].DefaultCellStyle.Format = "dd/MM/yyyy";
+            this.Close();
         }
-
-        // ================== TOMBOL REFRESH ==================
-
 
         private void btnKembali_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // Double click untuk melihat detail pengembalian
-        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void btnCetak_Click_1(object sender, EventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (dtLaporan == null || dtLaporan.Rows.Count == 0)
             {
-                string periode = dataGridView1.Rows[e.RowIndex].Cells["periode"].Value.ToString();
-                MessageBox.Show($"Menampilkan detail pengembalian periode: {periode}\n\n" +
-                              "Fitur ini dapat dikembangkan lebih lanjut (buka form detail).",
-                              "Detail Laporan", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Tidak ada data untuk dicetak.", "Peringatan",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
+
+            // Untuk sementara tampilkan pesan (bisa dikembangkan ke Crystal Report / PrintDocument nanti)
+            MessageBox.Show($"Mencetak {dtLaporan.Rows.Count} data laporan...\n\n" +
+                          "Fitur cetak lengkap akan ditambahkan kemudian.",
+                          "Cetak Laporan", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e)
+        private void btnRefresh_Click_1(object sender, EventArgs e)
         {
-            LoadCombinedReport();
+            LoadDataLaporan();
         }
     }
 }

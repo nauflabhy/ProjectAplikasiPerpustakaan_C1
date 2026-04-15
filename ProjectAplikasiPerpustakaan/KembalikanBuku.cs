@@ -25,6 +25,9 @@ namespace ProjectAplikasiPerpustakaan
             InitializeComponent();
             conn = new SqlConnection(connectionString);
             this.namaPengguna = namaPengguna;
+
+            // Tambahkan ini
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
         }
 
         // ================== Event DataGridView ==================
@@ -65,12 +68,13 @@ namespace ProjectAplikasiPerpustakaan
             if (idPeminjamanTerpilih == 0)
             {
                 MessageBox.Show("Silakan pilih buku yang ingin dikembalikan terlebih dahulu!",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Ambil data buku dari DataGridView
-            var row = dataGridView1.Rows[dataGridView1.CurrentRow.Index];
+            // Ambil data dari baris yang dipilih
+            var row = dataGridView1.CurrentRow;
+            if (row == null) return;
 
             string kodeBuku = row.Cells["Kode Buku"].Value?.ToString();
             string judulBuku = row.Cells["Judul Buku"].Value?.ToString();
@@ -91,7 +95,7 @@ namespace ProjectAplikasiPerpustakaan
                 }
             }
 
-            idPeminjamanTerpilih = 0;
+            idPeminjamanTerpilih = 0;   // reset setelah proses
         }
 
         // ================== Load & Tampil Data ==================
@@ -155,6 +159,18 @@ namespace ProjectAplikasiPerpustakaan
             {
                 if (conn.State == ConnectionState.Open)
                     conn.Close();
+            }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.Index >= 0)
+            {
+                var cell = dataGridView1.CurrentRow.Cells["id_peminjaman"];
+                if (cell?.Value != null)
+                {
+                    idPeminjamanTerpilih = Convert.ToInt32(cell.Value);
+                }
             }
         }
     }

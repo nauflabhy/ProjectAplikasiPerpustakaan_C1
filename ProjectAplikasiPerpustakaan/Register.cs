@@ -191,5 +191,18 @@ namespace ProjectAplikasiPerpustakaan
         {
             EnableRegisterButton();
         }
+
+        private void btnKembali_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Kembali ke halaman Login?\nPerubahan data akan dibuang.",
+                "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                LoginMenu loginForm = new LoginMenu();
+                loginForm.Show();
+                this.Close();
+            }
+        }
     }
 }

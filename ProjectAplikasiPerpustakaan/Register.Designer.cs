@@ -43,6 +43,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtNoHp = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.btnKembali = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label2
@@ -67,7 +68,7 @@
             // 
             // btnRegister
             // 
-            this.btnRegister.Location = new System.Drawing.Point(943, 607);
+            this.btnRegister.Location = new System.Drawing.Point(1051, 607);
             this.btnRegister.Name = "btnRegister";
             this.btnRegister.Size = new System.Drawing.Size(109, 51);
             this.btnRegister.TabIndex = 12;
@@ -174,11 +175,22 @@
             this.label8.TabIndex = 19;
             this.label8.Text = "No HP";
             // 
+            // btnKembali
+            // 
+            this.btnKembali.Location = new System.Drawing.Point(785, 607);
+            this.btnKembali.Name = "btnKembali";
+            this.btnKembali.Size = new System.Drawing.Size(120, 51);
+            this.btnKembali.TabIndex = 21;
+            this.btnKembali.Text = "Kembali";
+            this.btnKembali.UseVisualStyleBackColor = true;
+            this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click);
+            // 
             // Register
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1813, 816);
+            this.Controls.Add(this.btnKembali);
             this.Controls.Add(this.txtNoHp);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txtEmail);
@@ -219,5 +231,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtNoHp;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnKembali;
     }
 }
