@@ -110,6 +110,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "DaftarPengguna";
             this.Text = "B";
+            this.Load += new System.EventHandler(this.DaftarPengguna_Load_1);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

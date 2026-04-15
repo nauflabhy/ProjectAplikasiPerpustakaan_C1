@@ -147,7 +147,7 @@ namespace ProjectAplikasiPerpustakaan
             try
             {
                 // Panggil form DaftarPengajuan dan kirimkan nama admin
-                DaftarPengajuan formPengajuan = new DaftarPengajuan(namaAdmin);
+                btnKembali formPengajuan = new btnKembali(namaAdmin);
                 formPengajuan.ShowDialog();   // Gunakan ShowDialog agar setelah selesai bisa refresh
 
                 // Refresh daftar buku (stok mungkin berubah setelah persetujuan)

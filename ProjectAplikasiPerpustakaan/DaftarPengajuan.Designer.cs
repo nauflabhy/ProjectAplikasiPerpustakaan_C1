@@ -1,6 +1,6 @@
 ﻿namespace ProjectAplikasiPerpustakaan
 {
-    partial class DaftarPengajuan
+    partial class btnKembali
     {
         /// <summary>
         /// Required designer variable.
@@ -32,6 +32,7 @@
             this.btnTerima = new System.Windows.Forms.Button();
             this.btnTolak = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,16 +77,27 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // DaftarPengajuan
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1453, 687);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(197, 78);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Kembali";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnKembali
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1801, 842);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnTolak);
             this.Controls.Add(this.btnTerima);
             this.Controls.Add(this.dataGridView1);
-            this.Name = "DaftarPengajuan";
+            this.Name = "btnKembali";
             this.Text = "DaftarPengajuan";
             this.Load += new System.EventHandler(this.DaftarPengajuan_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -99,5 +111,6 @@
         private System.Windows.Forms.Button btnTerima;
         private System.Windows.Forms.Button btnTolak;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button button1;
     }
 }

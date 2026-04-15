@@ -5,15 +5,16 @@ using System.Windows.Forms;
 
 namespace ProjectAplikasiPerpustakaan
 {
-    public partial class DaftarPengajuan : Form
+    public partial class btnKembali : Form
     {
         private readonly string connectionString =
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtPengajuan;
         private readonly string namaAdmin;
+        private readonly string roleAdmin;
 
-        public DaftarPengajuan(string namaAdmin)
+        public btnKembali(string namaAdmin)
         {
             InitializeComponent();
             this.namaAdmin = namaAdmin;
@@ -292,5 +293,13 @@ namespace ProjectAplikasiPerpustakaan
 
         // Event kosong yang tidak perlu (bisa dihapus)
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+
+            // Buka kembali Form Admin dan kirim data admin yang sedang login
+            Admin formAdmin = new Admin(namaAdmin, roleAdmin);
+        }
     }
 }
