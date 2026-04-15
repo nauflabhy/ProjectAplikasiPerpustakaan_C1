@@ -1,115 +1,80 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace ProjectAplikasiPerpustakaan
 {
     public partial class CariBuku : Form
     {
-        private readonly SqlConnection conn;
         private readonly string connectionString =
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private readonly string namaPengguna;
         private readonly string rolePengguna;
-
         private DataTable dtBuku;
 
-
+        // Constructor untuk user yang sudah login
         public CariBuku(string nama, string role)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
-            this.namaPengguna = nama;   // ← pastikan baris ini ADA
-            this.rolePengguna = role;   // ← pastikan baris ini ADA
+            this.namaPengguna = nama;
+            this.rolePengguna = role;
         }
 
-        public CariBuku()
-        {
-            InitializeComponent();
-            conn = new SqlConnection(connectionString);
-        }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        // ================== LOAD DATA BUKU (dipanggil oleh tombol) ==================
+        private void LoadDataBuku()
         {
-
-        }
-
-        private void btnTampilBuku_Click(object sender, EventArgs e)
-        {
-          
-        }
-
-        private void btnPinjam_Click(object sender, EventArgs e)
-        {
-            // Cek apakah ada baris yang dipilih di DataGridView
-            if (dataGridView1.SelectedRows.Count == 0)
+            try
             {
-                MessageBox.Show("Silakan pilih buku yang ingin dipinjam terlebih dahulu.",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                        SELECT 
+                            id_buku,
+                            kode_buku,
+                            judul,
+                            pengarang,
+                            penerbit,
+                            tahun_terbit,
+                            kategori,
+                            stok_total,
+                            stok_tersedia,
+                            lokasi
+                        FROM BUKU
+                        ORDER BY judul ASC";
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                    {
+                        dtBuku = new DataTable();
+                        da.Fill(dtBuku);
+                        dataGridView1.DataSource = dtBuku;
+                    }
+
+                    // Pengaturan tampilan DataGridView
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    if (dataGridView1.Columns["id_buku"] != null)
+                        dataGridView1.Columns["id_buku"].Visible = false; // Sembunyikan ID
+                }
             }
-
-            // Ambil data buku dari baris yang dipilih
-            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-
-            int idBuku = Convert.ToInt32(selectedRow.Cells["id_buku"].Value);
-            string kodeBuku = selectedRow.Cells["kode_buku"].Value.ToString();
-            string judulBuku = selectedRow.Cells["judul"].Value.ToString();
-            int stokTersedia = Convert.ToInt32(selectedRow.Cells["stok_tersedia"].Value);
-
-            // Cek stok tersedia
-            if (stokTersedia <= 0)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Buku \"{judulBuku}\" sedang tidak tersedia (stok habis).",
-                    "Stok Habis", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Konfirmasi peminjaman
-            DialogResult konfirmasi = MessageBox.Show(
-                $"Anda akan meminjam buku:\n\nJudul : {judulBuku}\nKode  : {kodeBuku}\n\nLanjutkan?",
-                "Konfirmasi Peminjaman", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (konfirmasi == DialogResult.Yes)
-            {
-                // Buka form Pinjam dan kirim data buku yang dipilih
-                Pinjam formPinjam = new Pinjam (idBuku, kodeBuku, judulBuku, namaPengguna, rolePengguna);
-                formPinjam.Show();
-                this.Hide(); // Sembunyikan form CariBuku, atau gunakan this.Close() jika ingin ditutup
+                MessageBox.Show("Gagal memuat data buku:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void btnKembalikan_Click(object sender, EventArgs e)
+        // ================== TOMBOL LOAD DATABASE ==================
+        private void btnLoadDatabase_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(namaPengguna))
-            {
-                MessageBox.Show("Data pengguna tidak ditemukan.\nSilakan login kembali.",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Buka form KembalikanBuku dan kirimkan namaPengguna
-            KembalikanBuku formKembali = new KembalikanBuku(namaPengguna);
-
-            formKembali.Show();           // Buka form (bisa kembali ke CariBuku)
-                                          // this.Hide();               // Opsional: Sembunyikan form CariBuku
-                                          // this.Close();              // Atau tutup form CariBuku (pilih salah satu)
+            LoadDataBuku();
+            txtCariBuku.Focus(); // Fokus ke textbox pencarian setelah load
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Hindari klik pada header kolom
-            dataGridView1.ReadOnly = true;
-        }
-
+        // ================== PENCARIAN OTOMATIS ==================
         private void CariBukuByKeyword()
         {
             if (dtBuku == null) return;
@@ -118,7 +83,7 @@ namespace ProjectAplikasiPerpustakaan
 
             if (string.IsNullOrEmpty(keyword))
             {
-                dataGridView1.DataSource = dtBuku;   // Tampilkan semua
+                dataGridView1.DataSource = dtBuku;
             }
             else
             {
@@ -127,7 +92,6 @@ namespace ProjectAplikasiPerpustakaan
                                $"OR pengarang LIKE '%{keyword}%' " +
                                $"OR kategori LIKE '%{keyword}%' " +
                                $"OR kode_buku LIKE '%{keyword}%'";
-
                 dataGridView1.DataSource = dv;
             }
         }
@@ -137,75 +101,70 @@ namespace ProjectAplikasiPerpustakaan
             CariBukuByKeyword();
         }
 
-        private void CariBuku_Load(object sender, EventArgs e)
-        {
-            LoadDataBuku();        // Tampilkan semua buku saat form dibuka
-            txtCariBuku.Focus();   // Fokus ke textbox pencarian
-        }
-
-        private void LoadDataBuku()
-        {
-            try
-            {
-                conn.Open();
-                string query = @"SELECT 
-                                    id_buku,
-                                    kode_buku,
-                                    judul,
-                                    pengarang,
-                                    penerbit,
-                                    tahun_terbit,
-                                    kategori,
-                                    stok_total,
-                                    stok_tersedia,
-                                    lokasi
-                                 FROM BUKU 
-                                 ORDER BY judul ASC";
-
-                using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
-                {
-                    dtBuku = new DataTable();
-                    da.Fill(dtBuku);
-                    dataGridView1.DataSource = dtBuku;
-                }
-
-                // Atur tampilan kolom (opsional)
-                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dataGridView1.Columns["id_buku"].Visible = false; // sembunyikan ID jika tidak perlu
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal memuat data buku:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-            }
-        }
-
         private void btnCari_Click(object sender, EventArgs e)
         {
             CariBukuByKeyword();
             txtCariBuku.Focus();
         }
 
-        private void btnBukuDipinjam_Click(object sender, EventArgs e)
+        // ================== FORM LOAD (Hanya inisialisasi, tidak load data) ==================
+        private void CariBuku_Load(object sender, EventArgs e)
+        {
+            // TIDAK memanggil LoadDataBuku() lagi
+            // Form akan kosong saat pertama dibuka
+            txtCariBuku.Focus();
+        }
+
+        // ================== TOMBOL PINJAM ==================
+        private void btnPinjam_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Silakan pilih buku yang ingin dipinjam terlebih dahulu.",
+                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+            int idBuku = Convert.ToInt32(selectedRow.Cells["id_buku"].Value);
+            string kodeBuku = selectedRow.Cells["kode_buku"].Value.ToString();
+            string judulBuku = selectedRow.Cells["judul"].Value.ToString();
+            int stokTersedia = Convert.ToInt32(selectedRow.Cells["stok_tersedia"].Value);
+
+            if (stokTersedia <= 0)
+            {
+                MessageBox.Show($"Buku \"{judulBuku}\" sedang tidak tersedia (stok habis).",
+                    "Stok Habis", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult konfirmasi = MessageBox.Show(
+                $"Anda akan meminjam buku:\n\nJudul : {judulBuku}\nKode : {kodeBuku}\n\nLanjutkan?",
+                "Konfirmasi Peminjaman", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (konfirmasi == DialogResult.Yes)
+            {
+                Pinjam formPinjam = new Pinjam(idBuku, kodeBuku, judulBuku, namaPengguna, rolePengguna);
+                formPinjam.Show();
+                this.Hide();
+            }
+        }
+
+        // ================== TOMBOL KEMBALIKAN ==================
+        private void btnKembalikan_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(namaPengguna))
             {
-                MessageBox.Show("Data pengguna tidak ditemukan. Silakan login kembali.",
+                MessageBox.Show("Data pengguna tidak ditemukan.\nSilakan login kembali.",
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Buka form BukuDipinjamPengunjung dan kirimkan namaPengguna + role
-            BukuDipinjamPengunjung formRiwayat = new BukuDipinjamPengunjung(namaPengguna, rolePengguna);
-            formRiwayat.Show();        // Gunakan Show() agar bisa kembali ke CariBuku
-                                       // formRiwayat.ShowDialog(); // Jika ingin modal (tidak bisa klik form lain)
+            KembalikanBuku formKembali = new KembalikanBuku(namaPengguna);
+            formKembali.Show();
         }
 
+        // ================== TOMBOL DETAIL BUKU ==================
         private void btnDetailBuku_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 0)
@@ -218,7 +177,6 @@ namespace ProjectAplikasiPerpustakaan
             try
             {
                 DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-
                 int idBuku = Convert.ToInt32(selectedRow.Cells["id_buku"].Value);
                 string judulBuku = selectedRow.Cells["judul"].Value?.ToString() ?? "";
 
@@ -232,10 +190,25 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
+        // ================== TOMBOL RIWAYAT BUKU DIPINJAM ==================
+        private void btnBukuDipinjam_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(namaPengguna))
+            {
+                MessageBox.Show("Data pengguna tidak ditemukan. Silakan login kembali.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            BukuDipinjamPengunjung formRiwayat = new BukuDipinjamPengunjung(namaPengguna, rolePengguna);
+            formRiwayat.Show();
+        }
+
+        // ================== LOGOUT ==================
         private void btnLogout_Click(object sender, EventArgs e)
         {
             DialogResult konfirmasi = MessageBox.Show("Apakah Anda yakin ingin keluar?",
-    "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (konfirmasi == DialogResult.Yes)
             {
@@ -244,5 +217,9 @@ namespace ProjectAplikasiPerpustakaan
                 this.Close();
             }
         }
+
+        // Event kosong (bisa dihapus jika tidak dipakai)
+        private void btnConnect_Click(object sender, EventArgs e) { }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
     }
 }

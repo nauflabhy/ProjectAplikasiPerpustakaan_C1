@@ -37,6 +37,7 @@
             this.btnCari = new System.Windows.Forms.Button();
             this.btnBukuDipinjam = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.btnLoadDatabase = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -128,11 +129,22 @@
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
+            // btnLoadDatabase
+            // 
+            this.btnLoadDatabase.Location = new System.Drawing.Point(793, 724);
+            this.btnLoadDatabase.Name = "btnLoadDatabase";
+            this.btnLoadDatabase.Size = new System.Drawing.Size(158, 59);
+            this.btnLoadDatabase.TabIndex = 10;
+            this.btnLoadDatabase.Text = "Load Database";
+            this.btnLoadDatabase.UseVisualStyleBackColor = true;
+            this.btnLoadDatabase.Click += new System.EventHandler(this.btnLoadDatabase_Click);
+            // 
             // CariBuku
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1788, 832);
+            this.Controls.Add(this.btnLoadDatabase);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.btnBukuDipinjam);
             this.Controls.Add(this.btnCari);
@@ -162,5 +174,6 @@
         private System.Windows.Forms.Button btnCari;
         private System.Windows.Forms.Button btnBukuDipinjam;
         private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btnLoadDatabase;
     }
 }

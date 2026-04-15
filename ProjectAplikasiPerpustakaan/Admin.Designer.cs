@@ -109,7 +109,7 @@
             this.btnLoadDatabase.TabIndex = 6;
             this.btnLoadDatabase.Text = "Load Database";
             this.btnLoadDatabase.UseVisualStyleBackColor = true;
-            this.btnLoadDatabase.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.btnLoadDatabase.Click += new System.EventHandler(this.btnLoadDatabase_Click);
             // 
             // button1
             // 

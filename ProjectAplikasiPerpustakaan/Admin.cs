@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace ProjectAplikasiPerpustakaan
 {
@@ -15,17 +9,14 @@ namespace ProjectAplikasiPerpustakaan
     {
         private readonly string namaAdmin;
         private readonly string roleAdmin;
-        private readonly SqlConnection conn;
         private readonly string connectionString =
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtBuku;
 
-
         public Admin(string nama, string role)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
             this.namaAdmin = nama;
             this.roleAdmin = role;
         }
@@ -33,18 +24,18 @@ namespace ProjectAplikasiPerpustakaan
         public Admin()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
         }
 
+        // ================== FORM LOAD (TIDAK load data otomatis) ==================
         private void Admin_Load(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(namaAdmin))
             {
                 this.Text = $"Admin Panel - {namaAdmin}";
-                // lblWelcome.Text = $"Selamat datang, {namaAdmin}"; // uncomment jika ada label
             }
 
-            LoadDataBuku();   // Tampilkan daftar buku otomatis saat form dibuka
+            // TIDAK memanggil LoadDataBuku() lagi
+            // Data akan muncul hanya setelah tombol Load Database ditekan
         }
 
         // ================== LOAD DAFTAR BUKU ==================
@@ -52,94 +43,65 @@ namespace ProjectAplikasiPerpustakaan
         {
             try
             {
-                conn.Open();
-                string query = @"SELECT 
-                                    id_buku,
-                                    kode_buku,
-                                    judul,
-                                    pengarang,
-                                    penerbit,
-                                    tahun_terbit,
-                                    kategori,
-                                    stok_total,
-                                    stok_tersedia,
-                                    lokasi
-                                 FROM BUKU 
-                                 ORDER BY judul ASC";
-
-                using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    dtBuku = new DataTable();
-                    da.Fill(dtBuku);
-                    dataGridView1.DataSource = dtBuku;
+                    conn.Open();
+
+                    string query = @"
+                        SELECT 
+                            id_buku,
+                            kode_buku,
+                            judul,
+                            pengarang,
+                            penerbit,
+                            tahun_terbit,
+                            kategori,
+                            stok_total,
+                            stok_tersedia,
+                            lokasi
+                        FROM BUKU 
+                        ORDER BY judul ASC";
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                    {
+                        dtBuku = new DataTable();
+                        da.Fill(dtBuku);
+                        dataGridView1.DataSource = dtBuku;
+                    }
+
+                    // Pengaturan tampilan DataGridView
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dataGridView1.ReadOnly = true;
+                    dataGridView1.AllowUserToAddRows = false;
+                    dataGridView1.AllowUserToDeleteRows = false;
+                    dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                    dataGridView1.MultiSelect = false;
+
+                    // Sembunyikan kolom ID
+                    if (dataGridView1.Columns["id_buku"] != null)
+                        dataGridView1.Columns["id_buku"].Visible = false;
                 }
-
-                // Pengaturan tampilan DataGridView
-                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dataGridView1.ReadOnly = true;
-                dataGridView1.AllowUserToAddRows = false;
-                dataGridView1.AllowUserToDeleteRows = false;
-                dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dataGridView1.MultiSelect = false;
-
-                // Sembunyikan kolom ID
-                if (dataGridView1.Columns["id_buku"] != null)
-                    dataGridView1.Columns["id_buku"].Visible = false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal memuat daftar buku:\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-            }
         }
 
-        // Tombol Refresh Daftar Buku
-        private void btnRefresh_Click(object sender, EventArgs e)
+        // ================== TOMBOL LOAD DATABASE ==================
+        private void btnLoadDatabase_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    MessageBox.Show("✅ Koneksi ke Database BERHASIL!\n\n" +
-                                  "Server: " + conn.DataSource + "\n" +
-                                  "Database: " + conn.Database,
-                                  "Koneksi Berhasil",
-                                  MessageBoxButtons.OK,
-                                  MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("❌ Gagal terhubung ke database:\n" + ex.Message,
-                    "Koneksi Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            LoadDataBuku();
         }
 
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            DialogResult konfirmasi = MessageBox.Show("Apakah Anda yakin ingin keluar?",
-                "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (konfirmasi == DialogResult.Yes)
-            {
-                LoginMenu formLogin = new LoginMenu();
-                formLogin.Show();
-                this.Close();
-            }
-        }
-
-        // ================== TOMBOL LAINNYA (siap dikembangkan) ==================
+        // ================== TOMBOL EDIT BUKU ==================
         private void btnEditBuku_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Pilih buku yang ingin diedit.");
+                MessageBox.Show("Pilih buku yang ingin diedit.", "Peringatan",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -150,20 +112,19 @@ namespace ProjectAplikasiPerpustakaan
 
             if (formEdit.DialogResult == DialogResult.OK)
             {
-                // Refresh data grid
-                LoadDataBuku();        // panggil method load kamu
+                LoadDataBuku();        // Refresh setelah edit
             }
         }
 
+        // ================== TOMBOL DAFTAR PENGAJUAN ==================
         private void btnDaftarPengajuan_Click(object sender, EventArgs e)
         {
             try
             {
-                // Panggil form DaftarPengajuan dan kirimkan nama admin dan role admin
                 btnKembali formPengajuan = new btnKembali(namaAdmin, roleAdmin);
-                formPengajuan.ShowDialog();   // Gunakan ShowDialog agar setelah selesai bisa refresh
+                formPengajuan.ShowDialog();
 
-                // Refresh daftar buku (stok mungkin berubah setelah persetujuan)
+                // Refresh data setelah kembali dari form pengajuan
                 LoadDataBuku();
             }
             catch (Exception ex)
@@ -173,6 +134,7 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
+        // ================== TOMBOL DAFTAR PENGGUNA ==================
         private void btnPengguna_Click(object sender, EventArgs e)
         {
             try
@@ -187,22 +149,13 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
-        // Event kosong yang tidak diperlukan lagi bisa dihapus atau dibiarkan
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Bisa digunakan nanti jika ada tombol di dalam grid (misalnya tombol Edit/Hapus per baris)
-        }
-
+        // ================== TOMBOL LAPORAN ==================
         private void btnLaporan_Click(object sender, EventArgs e)
         {
             try
             {
                 CetakLaporan formLaporan = new CetakLaporan();
-                formLaporan.ShowDialog();   // Modal dialog (disarankan)
-
-                // Optional: Refresh data buku setelah kembali dari laporan
-                // (karena laporan mungkin mempengaruhi stok atau data lainnya)
-                // LoadDataBuku();
+                formLaporan.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -210,5 +163,22 @@ namespace ProjectAplikasiPerpustakaan
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // ================== LOGOUT ==================
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult konfirmasi = MessageBox.Show("Apakah Anda yakin ingin keluar?",
+                "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (konfirmasi == DialogResult.Yes)
+            {
+                LoginMenu formLogin = new LoginMenu();
+                formLogin.Show();
+                this.Close();
+            }
+        }
+
+        // Event kosong (bisa dihapus jika tidak dipakai)
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
     }
 }
