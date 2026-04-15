@@ -162,9 +162,16 @@ namespace ProjectAplikasiPerpustakaan
 
         private void btnPengguna_Click(object sender, EventArgs e)
         {
-            // KelolaPengguna formPengguna = new KelolaPengguna();
-            // formPengguna.ShowDialog();
-            MessageBox.Show("Fitur Kelola Pengguna akan dibuat selanjutnya.", "Info");
+            try
+            {
+                DaftarPengguna formDaftarPengguna = new DaftarPengguna();
+                formDaftarPengguna.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal membuka daftar pengguna:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Event kosong yang tidak diperlukan lagi bisa dihapus atau dibiarkan

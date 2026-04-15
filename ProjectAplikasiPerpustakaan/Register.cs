@@ -110,14 +110,17 @@ namespace ProjectAplikasiPerpustakaan
 
                 // Step 1: INSERT ke Pengguna
                 string insertPengguna = @"
-            INSERT INTO Pengguna (username, password, role)
-            VALUES (@username, @password, @role);
-            SELECT SCOPE_IDENTITY();";
+    INSERT INTO Pengguna (username, nama_lengkap, email, no_hp, password, role)
+    VALUES (@username, @nama_lengkap, @email, @no_hp, @password, @role);
+    SELECT SCOPE_IDENTITY();";
 
                 int idUserBaru = 0;
                 using (SqlCommand cmd = new SqlCommand(insertPengguna, conn, transaction))
                 {
                     cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@nama_lengkap", namaLengkap);
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@no_hp", noHp);
                     cmd.Parameters.AddWithValue("@password", password);
                     cmd.Parameters.AddWithValue("@role", role);
                     idUserBaru = Convert.ToInt32(cmd.ExecuteScalar());

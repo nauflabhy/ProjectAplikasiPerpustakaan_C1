@@ -65,6 +65,12 @@
     <Compile Include="DaftarPengajuan.Designer.cs">
       <DependentUpon>DaftarPengajuan.cs</DependentUpon>
     </Compile>
+    <Compile Include="DaftarPengguna.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DaftarPengguna.Designer.cs">
+      <DependentUpon>DaftarPengguna.cs</DependentUpon>
+    </Compile>
     <Compile Include="DaftarPengunjung.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DaftarPengajuan.resx">
       <DependentUpon>DaftarPengajuan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DaftarPengguna.resx">
+      <DependentUpon>DaftarPengguna.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DaftarPengunjung.resx">
       <DependentUpon>DaftarPengunjung.cs</DependentUpon>
