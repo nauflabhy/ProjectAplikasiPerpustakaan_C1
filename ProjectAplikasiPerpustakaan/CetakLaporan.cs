@@ -21,10 +21,10 @@ namespace ProjectAplikasiPerpustakaan
         private void CetakLaporan_Load(object sender, EventArgs e)
         {
             SetupDataGridView();
-            LoadDataLaporan();
+            LoadCombinedReport();           // Ganti ke method baru
         }
 
-        // ================== PENGATURAN DATAGRIDVIEW ==================
+        // ================== SETUP DATAGRIDVIEW ==================
         private void SetupDataGridView()
         {
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -34,65 +34,56 @@ namespace ProjectAplikasiPerpustakaan
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
             dataGridView1.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
+            dataGridView1.RowHeadersVisible = false;
         }
 
-        // ================== LOAD DATA LAPORAN ==================
-        private void LoadDataLaporan()
+        // ================== LOAD DATA LAPORAN + PENGEMBALIAN ==================
+        private void LoadCombinedReport(string periodeFilter = "")
         {
             string query = @"
-                SELECT 
-                    id_laporan,
-                    periode,
-                    total_kunjungan AS [Total Kunjungan],
-                    total_peminjaman AS [Total Peminjaman],
-                    total_pengembalian AS [Total Pengembalian],
-                    total_denda AS [Total Denda (Rp)],
-                    generated_at AS [Tanggal Dibuat]
-                FROM LAPORAN
-                ORDER BY periode DESC, generated_at DESC";
+        SELECT 
+            L.id_laporan,
+            L.periode,
+            L.total_kunjungan AS [Total Kunjungan],
+            L.total_peminjaman AS [Total Peminjaman],
+            L.total_pengembalian AS [Total Pengembalian],
+            L.total_denda AS [Total Denda (Summary)],
+            ISNULL(SUM(P.denda), 0) AS [Total Denda Aktual],
+            COUNT(P.id_pengembalian) AS [Jumlah Pengembalian Detail],
+            MAX(P.tanggal_kembali) AS [Pengembalian Terakhir],
+            L.generated_at AS [Tanggal Dibuat]
+        FROM LAPORAN L
+        LEFT JOIN PENGEMBALIAN P ON P.id_peminjaman IN 
+            (SELECT id_peminjaman FROM PEMINJAMAN)  -- Safety join
+        LEFT JOIN PEMINJAMAN PM ON PM.id_peminjaman = P.id_peminjaman
+        WHERE (@periode = '' OR L.periode = @periode)
+        GROUP BY 
+            L.id_laporan, L.periode, L.total_kunjungan, 
+            L.total_peminjaman, L.total_pengembalian, 
+            L.total_denda, L.generated_at
+        ORDER BY L.periode DESC, L.generated_at DESC";
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
-                using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                 {
+                    cmd.Parameters.AddWithValue("@periode", periodeFilter);
+
                     dtLaporan = new DataTable();
                     da.Fill(dtLaporan);
 
                     dataGridView1.DataSource = dtLaporan;
 
-                    // Sembunyikan kolom ID
+                    // Sembunyikan ID
                     if (dataGridView1.Columns["id_laporan"] != null)
                         dataGridView1.Columns["id_laporan"].Visible = false;
 
-                    // Format tampilan kolom
-                    if (dataGridView1.Columns["Total Denda (Rp)"] != null)
-                    {
-                        dataGridView1.Columns["Total Denda (Rp)"].DefaultCellStyle.Format = "N2";
-                        dataGridView1.Columns["Total Denda (Rp)"].DefaultCellStyle.Alignment =
-                            DataGridViewContentAlignment.MiddleRight;
-                    }
-
-                    // Format kolom angka lainnya
-                    string[] kolomAngka = { "Total Kunjungan", "Total Peminjaman", "Total Pengembalian" };
-                    foreach (string kolom in kolomAngka)
-                    {
-                        if (dataGridView1.Columns[kolom] != null)
-                        {
-                            dataGridView1.Columns[kolom].DefaultCellStyle.Alignment =
-                                DataGridViewContentAlignment.MiddleCenter;
-                        }
-                    }
-
-                    // Format tanggal
-                    if (dataGridView1.Columns["Tanggal Dibuat"] != null)
-                    {
-                        dataGridView1.Columns["Tanggal Dibuat"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-                    }
-
-                    // Update judul form
-                    this.Text = $"Cetak Laporan - {dtLaporan.Rows.Count} Data";
+                    FormatGridColumns();
                 }
+
+                this.Text = $"Cetak Laporan - {dtLaporan.Rows.Count} Data";
             }
             catch (Exception ex)
             {
@@ -101,28 +92,65 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
-        // ================== TOMBOL REFRESH ==================
-        private void btnRefresh_Click(object sender, EventArgs e)
+        private void FormatGridColumns()
         {
-            LoadDataLaporan();
+            // Format Rupiah
+            var colDendaSummary = dataGridView1.Columns["Total Denda (Summary)"];
+            var colDendaAktual = dataGridView1.Columns["Total Denda Aktual"];
+
+            if (colDendaSummary != null)
+            {
+                colDendaSummary.DefaultCellStyle.Format = "N0";
+                colDendaSummary.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
+            if (colDendaAktual != null)
+            {
+                colDendaAktual.DefaultCellStyle.Format = "N0";
+                colDendaAktual.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
+            // Format angka tengah
+            string[] kolomAngka = { "Total Kunjungan", "Total Peminjaman", "Total Pengembalian", "Jumlah Pengembalian Detail" };
+            foreach (string kolom in kolomAngka)
+            {
+                if (dataGridView1.Columns[kolom] != null)
+                {
+                    dataGridView1.Columns[kolom].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+            }
+
+            // Format tanggal
+            if (dataGridView1.Columns["Tanggal Dibuat"] != null)
+                dataGridView1.Columns["Tanggal Dibuat"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+
+            if (dataGridView1.Columns["Pengembalian Terakhir"] != null)
+                dataGridView1.Columns["Pengembalian Terakhir"].DefaultCellStyle.Format = "dd/MM/yyyy";
         }
 
-        // ================== TOMBOL KEMBALI ==================
+        // ================== TOMBOL REFRESH ==================
+
+
         private void btnKembali_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // Optional: Double click untuk melihat detail laporan (bisa dikembangkan)
+        // Double click untuk melihat detail pengembalian
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 string periode = dataGridView1.Rows[e.RowIndex].Cells["periode"].Value.ToString();
-                MessageBox.Show($"Detail Laporan Periode: {periode}\n\n" +
-                              "Fitur cetak PDF akan ditambahkan di versi selanjutnya.",
-                              "Informasi Laporan", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Menampilkan detail pengembalian periode: {periode}\n\n" +
+                              "Fitur ini dapat dikembangkan lebih lanjut (buka form detail).",
+                              "Detail Laporan", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadCombinedReport();
         }
     }
 }
