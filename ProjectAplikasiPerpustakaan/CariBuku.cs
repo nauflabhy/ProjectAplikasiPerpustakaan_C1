@@ -39,12 +39,12 @@ namespace ProjectAplikasiPerpustakaan
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void btnTampilBuku_Click(object sender, EventArgs e)
         {
-
+          
         }
 
         private void btnPinjam_Click(object sender, EventArgs e)
@@ -81,7 +81,7 @@ namespace ProjectAplikasiPerpustakaan
             if (konfirmasi == DialogResult.Yes)
             {
                 // Buka form Pinjam dan kirim data buku yang dipilih
-                Pinjam formPinjam = new Pinjam(idBuku, kodeBuku, judulBuku, namaPengguna, rolePengguna);
+                Pinjam formPinjam = new Pinjam (idBuku, kodeBuku, judulBuku, namaPengguna, rolePengguna);
                 formPinjam.Show();
                 this.Hide(); // Sembunyikan form CariBuku, atau gunakan this.Close() jika ingin ditutup
             }
@@ -229,6 +229,19 @@ namespace ProjectAplikasiPerpustakaan
             {
                 MessageBox.Show("Gagal membuka detail buku:\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult konfirmasi = MessageBox.Show("Apakah Anda yakin ingin keluar?",
+    "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (konfirmasi == DialogResult.Yes)
+            {
+                LoginMenu formLogin = new LoginMenu();
+                formLogin.Show();
+                this.Close();
             }
         }
     }

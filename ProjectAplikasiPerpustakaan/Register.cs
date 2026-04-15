@@ -48,7 +48,120 @@ namespace ProjectAplikasiPerpustakaan
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
+            string confirmPassword = txtConfirmPassword.Text.Trim();
+            string namaLengkap = txtNamaLengkap.Text.Trim();
+            string noHp = txtNoHp.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            string role = "pengunjung";
 
+            // ===== VALIDASI DULU SEBELUM MENYENTUH DATABASE =====
+            if (string.IsNullOrEmpty(username) ||
+                string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(confirmPassword) ||
+                string.IsNullOrEmpty(namaLengkap) ||
+                string.IsNullOrEmpty(noHp) ||
+                string.IsNullOrEmpty(email))
+            {
+                MessageBox.Show("Username, Password, Nama Lengkap, Email, dan No HP wajib diisi!",
+                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (password != confirmPassword)
+            {
+                MessageBox.Show("Password dan Konfirmasi Password tidak cocok!",
+                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtConfirmPassword.Clear();
+                txtConfirmPassword.Focus();
+                return;
+            }
+
+            if (password.Length < 6)
+            {
+                MessageBox.Show("Password minimal 6 karakter!",
+                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // ===== BARU MASUK DATABASE SETELAH VALIDASI LOLOS =====
+            SqlTransaction transaction = null;
+
+            try
+            {
+                conn.Open();
+                transaction = conn.BeginTransaction(); // mulai transaction
+
+                // Cek username sudah ada
+                string checkQuery = "SELECT COUNT(*) FROM Pengguna WHERE username = @username";
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn, transaction))
+                {
+                    checkCmd.Parameters.AddWithValue("@username", username);
+                    int existing = (int)checkCmd.ExecuteScalar();
+                    if (existing > 0)
+                    {
+                        transaction.Rollback(); // batalkan
+                        MessageBox.Show("Username sudah digunakan! Silakan pilih username lain.",
+                            "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                // Step 1: INSERT ke Pengguna
+                string insertPengguna = @"
+            INSERT INTO Pengguna (username, password, role)
+            VALUES (@username, @password, @role);
+            SELECT SCOPE_IDENTITY();";
+
+                int idUserBaru = 0;
+                using (SqlCommand cmd = new SqlCommand(insertPengguna, conn, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@password", password);
+                    cmd.Parameters.AddWithValue("@role", role);
+                    idUserBaru = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Step 2: INSERT ke PENGUNJUNG
+                if (idUserBaru > 0)
+                {
+                    string insertPengunjung = @"
+                INSERT INTO PENGUNJUNG (id_user, nama_lengkap, no_hp, email)
+                VALUES (@id_user, @nama_lengkap, @no_hp, @email)";
+
+                    using (SqlCommand cmd2 = new SqlCommand(insertPengunjung, conn, transaction))
+                    {
+                        cmd2.Parameters.AddWithValue("@id_user", idUserBaru);
+                        cmd2.Parameters.AddWithValue("@nama_lengkap", namaLengkap);
+                        cmd2.Parameters.AddWithValue("@no_hp", noHp);
+                        cmd2.Parameters.AddWithValue("@email", email);
+                        cmd2.ExecuteNonQuery();
+                    }
+                }
+
+                // Semua berhasil → COMMIT
+                transaction.Commit();
+
+                MessageBox.Show("Registrasi berhasil!\nSilakan login dengan akun baru Anda.",
+                    "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                LoginMenu loginForm = new LoginMenu();
+                loginForm.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                // Ada error → ROLLBACK semua, tidak ada data tersimpan
+                transaction?.Rollback();
+                MessageBox.Show("Terjadi kesalahan saat registrasi:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
         }
 
 
@@ -59,7 +172,7 @@ namespace ProjectAplikasiPerpustakaan
             loginForm.Show();
             this.Close();
         }
-
+        
 
         private void txtUsername_TextChanged_1(object sender, EventArgs e)
         {
@@ -74,196 +187,6 @@ namespace ProjectAplikasiPerpustakaan
         private void txtConfirmPassword_TextChanged_1(object sender, EventArgs e)
         {
             EnableRegisterButton();
-        }
-
-        private void InitializeComponent()
-        {
-            this.txtNoHp = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.txtEmail = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtNamaLengkap = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtConfirmPassword = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnRegister = new System.Windows.Forms.Button();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
-            // 
-            // txtNoHp
-            // 
-            this.txtNoHp.Location = new System.Drawing.Point(882, 481);
-            this.txtNoHp.Name = "txtNoHp";
-            this.txtNoHp.Size = new System.Drawing.Size(228, 26);
-            this.txtNoHp.TabIndex = 35;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(718, 484);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(55, 20);
-            this.label8.TabIndex = 34;
-            this.label8.Text = "No HP";
-            // 
-            // txtEmail
-            // 
-            this.txtEmail.Location = new System.Drawing.Point(882, 434);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(228, 26);
-            this.txtEmail.TabIndex = 33;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(718, 437);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(48, 20);
-            this.label7.TabIndex = 32;
-            this.label7.Text = "Email";
-            // 
-            // txtNamaLengkap
-            // 
-            this.txtNamaLengkap.Location = new System.Drawing.Point(882, 379);
-            this.txtNamaLengkap.Name = "txtNamaLengkap";
-            this.txtNamaLengkap.Size = new System.Drawing.Size(228, 26);
-            this.txtNamaLengkap.TabIndex = 31;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(718, 382);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(117, 20);
-            this.label6.TabIndex = 30;
-            this.label6.Text = "Nama Lengkap";
-            // 
-            // txtConfirmPassword
-            // 
-            this.txtConfirmPassword.Location = new System.Drawing.Point(882, 590);
-            this.txtConfirmPassword.Name = "txtConfirmPassword";
-            this.txtConfirmPassword.Size = new System.Drawing.Size(228, 26);
-            this.txtConfirmPassword.TabIndex = 29;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(718, 590);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(137, 20);
-            this.label5.TabIndex = 28;
-            this.label5.Text = "Confirm Passowrd";
-            // 
-            // btnRegister
-            // 
-            this.btnRegister.Location = new System.Drawing.Point(893, 661);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(109, 51);
-            this.btnRegister.TabIndex = 27;
-            this.btnRegister.Text = "Buat Akun";
-            this.btnRegister.UseVisualStyleBackColor = true;
-            // 
-            // txtPassword
-            // 
-            this.txtPassword.Location = new System.Drawing.Point(882, 536);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(228, 26);
-            this.txtPassword.TabIndex = 26;
-            // 
-            // txtUsername
-            // 
-            this.txtUsername.Location = new System.Drawing.Point(882, 323);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(228, 26);
-            this.txtUsername.TabIndex = 25;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(718, 536);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(78, 20);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "Password";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(718, 326);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 20);
-            this.label3.TabIndex = 23;
-            this.label3.Text = "Username";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(659, 142);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(504, 32);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "SISTEM PEMINJAMAN BUKU PERPUSTAKAAN";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(876, 211);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(126, 32);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "REGISTER";
-            // 
-            // Register
-            // 
-            this.ClientSize = new System.Drawing.Size(1823, 854);
-            this.Controls.Add(this.txtNoHp);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.txtEmail);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.txtNamaLengkap);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.txtConfirmPassword);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.btnRegister);
-            this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.txtUsername);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Name = "Register";
-            this.Load += new System.EventHandler(this.Register_Load_1);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
-        }
-
-        private TextBox txtNoHp;
-        private Label label8;
-        private TextBox txtEmail;
-        private Label label7;
-        private TextBox txtNamaLengkap;
-        private Label label6;
-        private TextBox txtConfirmPassword;
-        private Label label5;
-        private Button btnRegister;
-        private TextBox txtPassword;
-        private TextBox txtUsername;
-        private Label label4;
-        private Label label3;
-        private Label label2;
-        private Label label1;
-
-        private void Register_Load_1(object sender, EventArgs e)
-        {
-
         }
     }
 }

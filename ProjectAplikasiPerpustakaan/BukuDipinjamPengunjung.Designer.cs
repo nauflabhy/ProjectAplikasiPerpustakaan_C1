@@ -1,6 +1,6 @@
 ﻿namespace ProjectAplikasiPerpustakaan
 {
-    partial class KembalikanBuku
+    partial class BukuDipinjamPengunjung
     {
         /// <summary>
         /// Required designer variable.
@@ -30,52 +30,40 @@
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnKembali = new System.Windows.Forms.Button();
-            this.btnKembalikanBuku = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 22);
+            this.dataGridView1.Location = new System.Drawing.Point(27, 21);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(1767, 609);
+            this.dataGridView1.Size = new System.Drawing.Size(1761, 574);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // btnKembali
             // 
-            this.btnKembali.Location = new System.Drawing.Point(1311, 694);
+            this.btnKembali.Location = new System.Drawing.Point(1498, 664);
             this.btnKembali.Name = "btnKembali";
-            this.btnKembali.Size = new System.Drawing.Size(164, 63);
+            this.btnKembali.Size = new System.Drawing.Size(249, 67);
             this.btnKembali.TabIndex = 1;
             this.btnKembali.Text = "Kembali";
             this.btnKembali.UseVisualStyleBackColor = true;
-            this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click);
+            this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click_1);
             // 
-            // btnKembalikanBuku
-            // 
-            this.btnKembalikanBuku.Location = new System.Drawing.Point(1528, 694);
-            this.btnKembalikanBuku.Name = "btnKembalikanBuku";
-            this.btnKembalikanBuku.Size = new System.Drawing.Size(164, 63);
-            this.btnKembalikanBuku.TabIndex = 2;
-            this.btnKembalikanBuku.Text = "Kembalikan Buku";
-            this.btnKembalikanBuku.UseVisualStyleBackColor = true;
-            this.btnKembalikanBuku.Click += new System.EventHandler(this.btnKembalikanBuku_Click);
-            // 
-            // KembalikanBuku
+            // BukuDipinjamPengunjung
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1824, 818);
-            this.Controls.Add(this.btnKembalikanBuku);
+            this.ClientSize = new System.Drawing.Size(1800, 844);
             this.Controls.Add(this.btnKembali);
             this.Controls.Add(this.dataGridView1);
-            this.Name = "KembalikanBuku";
-            this.Text = "KembalikanBuku";
-            this.Load += new System.EventHandler(this.KembalikanBuku_Load);
+            this.Name = "BukuDipinjamPengunjung";
+            this.Text = "BukuDipinjamPengunjung";
+            this.Load += new System.EventHandler(this.BukuDipinjamPengunjung_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
@@ -85,6 +73,5 @@
 
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnKembali;
-        private System.Windows.Forms.Button btnKembalikanBuku;
     }
 }

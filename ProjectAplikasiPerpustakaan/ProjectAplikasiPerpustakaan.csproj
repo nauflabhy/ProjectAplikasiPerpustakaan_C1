@@ -47,17 +47,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CariBuku.cs">
+    <Compile Include="Admin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CariBuku.Designer.cs">
-      <DependentUpon>CariBuku.cs</DependentUpon>
+    <Compile Include="Admin.Designer.cs">
+      <DependentUpon>Admin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BukuDipinjamPengunjung.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BukuDipinjamPengunjung.Designer.cs">
+      <DependentUpon>BukuDipinjamPengunjung.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DaftarPengajuan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DaftarPengajuan.Designer.cs">
+      <DependentUpon>DaftarPengajuan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DaftarPengunjung.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DaftarPengunjung.Designer.cs">
+      <DependentUpon>DaftarPengunjung.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataPeminjaman.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataPeminjaman.Designer.cs">
+      <DependentUpon>DataPeminjaman.cs</DependentUpon>
     </Compile>
     <Compile Include="DetailBuku.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DetailBuku.Designer.cs">
       <DependentUpon>DetailBuku.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Edit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Edit.Designer.cs">
+      <DependentUpon>Edit.cs</DependentUpon>
     </Compile>
     <Compile Include="KembalikanBuku.cs">
       <SubType>Form</SubType>
@@ -70,6 +100,12 @@
     </Compile>
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CariBuku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CariBuku.Designer.cs">
+      <DependentUpon>CariBuku.cs</DependentUpon>
     </Compile>
     <Compile Include="Pinjam.cs">
       <SubType>Form</SubType>
@@ -85,17 +121,35 @@
     <Compile Include="Register.Designer.cs">
       <DependentUpon>Register.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CariBuku.resx">
-      <DependentUpon>CariBuku.cs</DependentUpon>
+    <EmbeddedResource Include="Admin.resx">
+      <DependentUpon>Admin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BukuDipinjamPengunjung.resx">
+      <DependentUpon>BukuDipinjamPengunjung.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DaftarPengajuan.resx">
+      <DependentUpon>DaftarPengajuan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DaftarPengunjung.resx">
+      <DependentUpon>DaftarPengunjung.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataPeminjaman.resx">
+      <DependentUpon>DataPeminjaman.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DetailBuku.resx">
       <DependentUpon>DetailBuku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Edit.resx">
+      <DependentUpon>Edit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KembalikanBuku.resx">
       <DependentUpon>KembalikanBuku.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CariBuku.resx">
+      <DependentUpon>CariBuku.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pinjam.resx">
       <DependentUpon>Pinjam.cs</DependentUpon>
