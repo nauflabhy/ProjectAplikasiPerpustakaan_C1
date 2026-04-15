@@ -37,9 +37,12 @@ namespace ProjectAplikasiPerpustakaan
                 return;
             }
 
-            string username = dataGridView1.SelectedRows[0].Cells["Username"].Value.ToString();
-            int idUser = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["ID"].Value);
+            // Ambil data dari baris yang dipilih
+            DataGridViewRow row = dataGridView1.SelectedRows[0];
+            int idUser = Convert.ToInt32(row.Cells["id_user"].Value);
+            string username = row.Cells["username"].Value.ToString();
 
+            // Proteksi akun Admin utama
             if (username.ToLower() == "admin")
             {
                 MessageBox.Show("Tidak dapat menghapus akun Admin utama!",
@@ -47,9 +50,15 @@ namespace ProjectAplikasiPerpustakaan
                 return;
             }
 
+            // Konfirmasi sebelum menghapus
             DialogResult konfirmasi = MessageBox.Show(
-                $"Yakin ingin menghapus pengguna:\n\nUsername: {username} ?\n\nData ini tidak dapat dikembalikan.",
-                "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                $"Yakin ingin menghapus pengguna:\n\n" +
+                $"Username : {username}\n" +
+                $"ID       : {idUser}\n\n" +
+                "Data ini tidak dapat dikembalikan.",
+                "Konfirmasi Hapus Pengguna",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
 
             if (konfirmasi == DialogResult.Yes)
             {
@@ -59,7 +68,73 @@ namespace ProjectAplikasiPerpustakaan
 
         private void HapusPengguna(int idUser)
         {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
 
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // === HAPUS SEMUA DATA TERKAIT TERLEBIH DAHULU ===
+
+                            // 1. Hapus dari PEMINJAMAN
+                            string sqlPeminjaman = "DELETE FROM PEMINJAMAN WHERE id_pengunjung = @id";
+                            using (SqlCommand cmd = new SqlCommand(sqlPeminjaman, connection, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@id", idUser);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 2. Hapus dari tabel lain yang mungkin ada (tambahkan jika ada)
+                            // Contoh: jika ada tabel Pengembalian
+                            string sqlPengembalian = "DELETE FROM Pengembalian WHERE id_pengunjung = @id";
+                            using (SqlCommand cmd = new SqlCommand(sqlPengembalian, connection, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@id", idUser);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 3. Hapus dari PENGUNJUNG
+                            string sqlPengunjung = "DELETE FROM PENGUNJUNG WHERE id_user = @id";
+                            using (SqlCommand cmd = new SqlCommand(sqlPengunjung, connection, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@id", idUser);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 4. Hapus dari Pengguna
+                            string sqlPengguna = "DELETE FROM Pengguna WHERE id_user = @id";
+                            using (SqlCommand cmd = new SqlCommand(sqlPengguna, connection, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@id", idUser);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            transaction.Commit();
+
+                            MessageBox.Show("Pengguna berhasil dihapus beserta semua data terkaitnya.",
+                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Refresh grid
+                            DaftarPengguna_Load_1(this, EventArgs.Empty);
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show("Gagal menghapus pengguna:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR koneksi:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnKembali_Click(object sender, EventArgs e)
@@ -69,12 +144,23 @@ namespace ProjectAplikasiPerpustakaan
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Fitur Edit Pengguna akan dibuat selanjutnya.", "Info");
-        }
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Silakan pilih pengguna yang ingin diedit.",
+                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Fitur Update Pengguna akan dibuat selanjutnya.", "Info");
+            int idUser = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_user"].Value);
+
+            EditPengguna formEdit = new EditPengguna(idUser);
+            formEdit.ShowDialog(); // pakai ShowDialog agar modal
+
+            // Setelah form ditutup, refresh data otomatis
+            if (formEdit.DialogResult == DialogResult.OK)
+            {
+                DaftarPengguna_Load_1(this, EventArgs.Empty);
+            }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

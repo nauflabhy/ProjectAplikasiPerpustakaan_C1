@@ -95,6 +95,12 @@
     <Compile Include="Edit.Designer.cs">
       <DependentUpon>Edit.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditPengguna.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPengguna.Designer.cs">
+      <DependentUpon>EditPengguna.cs</DependentUpon>
+    </Compile>
     <Compile Include="KembalikanBuku.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Edit.resx">
       <DependentUpon>Edit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPengguna.resx">
+      <DependentUpon>EditPengguna.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KembalikanBuku.resx">
       <DependentUpon>KembalikanBuku.cs</DependentUpon>
