@@ -19,6 +19,7 @@ namespace ProjectAplikasiPerpustakaan
 
         private readonly string namaPengguna;
         private int idPeminjamanTerpilih = 0;
+
         public KembalikanBuku(string namaPengguna)
         {
             InitializeComponent();
@@ -26,12 +27,18 @@ namespace ProjectAplikasiPerpustakaan
             this.namaPengguna = namaPengguna;
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        // ================== Event DataGridView ==================
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 idPeminjamanTerpilih = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["id_peminjaman"].Value);
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
 
         private void WarnaiBarisBerdasarkanStatus()
@@ -47,6 +54,7 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
+        // ================== Tombol ==================
         private void btnKembali_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -61,57 +69,32 @@ namespace ProjectAplikasiPerpustakaan
                 return;
             }
 
-            DialogResult konfirmasi = MessageBox.Show("Apakah Anda yakin ingin mengembalikan buku ini?",
-                "Konfirmasi Pengembalian", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // Ambil data buku dari DataGridView
+            var row = dataGridView1.Rows[dataGridView1.CurrentRow.Index];
 
-            if (konfirmasi == DialogResult.Yes)
+            string kodeBuku = row.Cells["Kode Buku"].Value?.ToString();
+            string judulBuku = row.Cells["Judul Buku"].Value?.ToString();
+            DateTime tglPinjam = Convert.ToDateTime(row.Cells["Tanggal Pinjam"].Value);
+            DateTime tglJatuhTempo = Convert.ToDateTime(row.Cells["Jatuh Tempo"].Value);
+
+            using (var formPengembalian = new FormPengembalian(
+                idPeminjamanTerpilih,
+                namaPengguna,
+                kodeBuku,
+                judulBuku,
+                tglPinjam,
+                tglJatuhTempo))
             {
-                ProsesPengembalian();
-            }
-        }
-
-        private void ProsesPengembalian()
-        {
-            try
-            {
-                conn.Open();
-
-                string query = @"
-                    INSERT INTO PENGEMBALIAN (id_peminjaman, tanggal_ajuan, status)
-                    VALUES (@id_peminjaman, GETDATE(), 'menunggu');
-
-                    UPDATE PEMINJAMAN 
-                    SET status = 'selesai' 
-                    WHERE id_peminjaman = @id_peminjaman;";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                if (formPengembalian.ShowDialog() == DialogResult.OK)
                 {
-                    cmd.Parameters.AddWithValue("@id_peminjaman", idPeminjamanTerpilih);
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                    {
-                        MessageBox.Show("Pengembalian buku berhasil diajukan!\nSilakan tunggu verifikasi admin.",
-                            "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Refresh data
-                        TampilkanBukuYangDipinjam();
-                        idPeminjamanTerpilih = 0;
-                    }
+                    TampilkanBukuYangDipinjam();
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Terjadi kesalahan saat mengajukan pengembalian:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-            }
+
+            idPeminjamanTerpilih = 0;
         }
 
+        // ================== Load & Tampil Data ==================
         private void KembalikanBuku_Load(object sender, EventArgs e)
         {
             TampilkanBukuYangDipinjam();
@@ -122,9 +105,8 @@ namespace ProjectAplikasiPerpustakaan
             try
             {
                 conn.Open();
-
                 string query = @"
-                    SELECT 
+                    SELECT
                         pm.id_peminjaman,
                         b.kode_buku AS [Kode Buku],
                         b.judul AS [Judul Buku],
@@ -137,14 +119,13 @@ namespace ProjectAplikasiPerpustakaan
                     INNER JOIN PENGUNJUNG pg ON pm.id_pengunjung = pg.id_pengunjung
                     INNER JOIN Pengguna u ON pg.id_user = u.id_user
                     INNER JOIN BUKU b ON pm.id_buku = b.id_buku
-                    WHERE u.username = @namaPengguna 
+                    WHERE u.username = @namaPengguna
                       AND pm.status IN ('dipinjam', 'disetujui')
                     ORDER BY pm.tanggal_pinjam DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@namaPengguna", namaPengguna);
-
                     using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
@@ -158,8 +139,8 @@ namespace ProjectAplikasiPerpustakaan
                 dataGridView1.ReadOnly = true;
                 dataGridView1.AllowUserToAddRows = false;
                 dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                dataGridView1.MultiSelect = false;
 
-                // Sembunyikan kolom id_peminjaman
                 if (dataGridView1.Columns["id_peminjaman"] != null)
                     dataGridView1.Columns["id_peminjaman"].Visible = false;
 
@@ -176,6 +157,5 @@ namespace ProjectAplikasiPerpustakaan
                     conn.Close();
             }
         }
-
     }
 }

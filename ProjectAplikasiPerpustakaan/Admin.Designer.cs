@@ -35,6 +35,8 @@
             this.btnPengguna = new System.Windows.Forms.Button();
             this.btnEditBuku = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnLaporan = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -101,7 +103,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(878, 725);
+            this.btnRefresh.Location = new System.Drawing.Point(1052, 725);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(147, 65);
             this.btnRefresh.TabIndex = 6;
@@ -109,11 +111,32 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // btnLaporan
+            // 
+            this.btnLaporan.Location = new System.Drawing.Point(859, 725);
+            this.btnLaporan.Name = "btnLaporan";
+            this.btnLaporan.Size = new System.Drawing.Size(161, 65);
+            this.btnLaporan.TabIndex = 8;
+            this.btnLaporan.Text = "Laporan";
+            this.btnLaporan.UseVisualStyleBackColor = true;
+            this.btnLaporan.Click += new System.EventHandler(this.btnLaporan_Click);
+            // 
             // Admin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1735, 830);
+            this.Controls.Add(this.btnLaporan);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnEditBuku);
             this.Controls.Add(this.btnPengguna);
@@ -139,5 +162,7 @@
         private System.Windows.Forms.Button btnPengguna;
         private System.Windows.Forms.Button btnEditBuku;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnLaporan;
     }
 }

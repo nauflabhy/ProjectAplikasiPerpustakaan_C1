@@ -59,6 +59,12 @@
     <Compile Include="BukuDipinjamPengunjung.Designer.cs">
       <DependentUpon>BukuDipinjamPengunjung.cs</DependentUpon>
     </Compile>
+    <Compile Include="CetakLaporan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CetakLaporan.Designer.cs">
+      <DependentUpon>CetakLaporan.cs</DependentUpon>
+    </Compile>
     <Compile Include="DaftarPengajuan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,11 +101,23 @@
     <Compile Include="Edit.Designer.cs">
       <DependentUpon>Edit.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditBuku.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditBuku.Designer.cs">
+      <DependentUpon>EditBuku.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditPengguna.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="EditPengguna.Designer.cs">
       <DependentUpon>EditPengguna.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPengembalian.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPengembalian.Designer.cs">
+      <DependentUpon>FormPengembalian.cs</DependentUpon>
     </Compile>
     <Compile Include="KembalikanBuku.cs">
       <SubType>Form</SubType>
@@ -139,6 +157,9 @@
     <EmbeddedResource Include="BukuDipinjamPengunjung.resx">
       <DependentUpon>BukuDipinjamPengunjung.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CetakLaporan.resx">
+      <DependentUpon>CetakLaporan.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DaftarPengajuan.resx">
       <DependentUpon>DaftarPengajuan.cs</DependentUpon>
     </EmbeddedResource>
@@ -157,8 +178,14 @@
     <EmbeddedResource Include="Edit.resx">
       <DependentUpon>Edit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EditBuku.resx">
+      <DependentUpon>EditBuku.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditPengguna.resx">
       <DependentUpon>EditPengguna.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPengembalian.resx">
+      <DependentUpon>FormPengembalian.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KembalikanBuku.resx">
       <DependentUpon>KembalikanBuku.cs</DependentUpon>

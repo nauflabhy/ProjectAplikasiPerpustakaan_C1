@@ -78,44 +78,71 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         try
                         {
-                            // === HAPUS SEMUA DATA TERKAIT TERLEBIH DAHULU ===
-
-                            // 1. Hapus dari PEMINJAMAN
-                            string sqlPeminjaman = "DELETE FROM PEMINJAMAN WHERE id_pengunjung = @id";
-                            using (SqlCommand cmd = new SqlCommand(sqlPeminjaman, connection, transaction))
+                            // Langkah 1: Ambil id_pengunjung dari tabel PENGUNJUNG
+                            int? idPengunjung = null;
+                            string queryIdPengunjung = "SELECT id_pengunjung FROM PENGUNJUNG WHERE id_user = @idUser";
+                            using (SqlCommand cmd = new SqlCommand(queryIdPengunjung, connection, transaction))
                             {
-                                cmd.Parameters.AddWithValue("@id", idUser);
-                                cmd.ExecuteNonQuery();
+                                cmd.Parameters.AddWithValue("@idUser", idUser);
+                                object result = cmd.ExecuteScalar();
+                                if (result != null && result != DBNull.Value)
+                                {
+                                    idPengunjung = Convert.ToInt32(result);
+                                }
                             }
 
-                            // 2. Hapus dari tabel lain yang mungkin ada (tambahkan jika ada)
-                            // Contoh: jika ada tabel Pengembalian
-                            string sqlPengembalian = "DELETE FROM Pengembalian WHERE id_pengunjung = @id";
-                            using (SqlCommand cmd = new SqlCommand(sqlPengembalian, connection, transaction))
+                            if (idPengunjung.HasValue)
                             {
-                                cmd.Parameters.AddWithValue("@id", idUser);
-                                cmd.ExecuteNonQuery();
+                                // Langkah 2: Hapus dari PENGEMBALIAN terlebih dahulu (karena bergantung ke PEMINJAMAN)
+                                string sqlPengembalian = @"
+                            DELETE FROM PENGEMBALIAN 
+                            WHERE id_peminjaman IN (
+                                SELECT id_peminjaman 
+                                FROM PEMINJAMAN 
+                                WHERE id_pengunjung = @idPengunjung
+                            )";
+                                using (SqlCommand cmd = new SqlCommand(sqlPengembalian, connection, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@idPengunjung", idPengunjung.Value);
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                // Langkah 3: Hapus dari PEMINJAMAN
+                                string sqlPeminjaman = "DELETE FROM PEMINJAMAN WHERE id_pengunjung = @idPengunjung";
+                                using (SqlCommand cmd = new SqlCommand(sqlPeminjaman, connection, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@idPengunjung", idPengunjung.Value);
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                // Langkah 4: Hapus dari KUNJUNGAN
+                                string sqlKunjungan = "DELETE FROM KUNJUNGAN WHERE id_pengunjung = @idPengunjung";
+                                using (SqlCommand cmd = new SqlCommand(sqlKunjungan, connection, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@idPengunjung", idPengunjung.Value);
+                                    cmd.ExecuteNonQuery();
+                                }
                             }
 
-                            // 3. Hapus dari PENGUNJUNG
-                            string sqlPengunjung = "DELETE FROM PENGUNJUNG WHERE id_user = @id";
+                            // Langkah 5: Hapus dari PENGUNJUNG
+                            string sqlPengunjung = "DELETE FROM PENGUNJUNG WHERE id_user = @idUser";
                             using (SqlCommand cmd = new SqlCommand(sqlPengunjung, connection, transaction))
                             {
-                                cmd.Parameters.AddWithValue("@id", idUser);
+                                cmd.Parameters.AddWithValue("@idUser", idUser);
                                 cmd.ExecuteNonQuery();
                             }
 
-                            // 4. Hapus dari Pengguna
-                            string sqlPengguna = "DELETE FROM Pengguna WHERE id_user = @id";
+                            // Langkah 6: Hapus dari Pengguna
+                            string sqlPengguna = "DELETE FROM Pengguna WHERE id_user = @idUser";
                             using (SqlCommand cmd = new SqlCommand(sqlPengguna, connection, transaction))
                             {
-                                cmd.Parameters.AddWithValue("@id", idUser);
+                                cmd.Parameters.AddWithValue("@idUser", idUser);
                                 cmd.ExecuteNonQuery();
                             }
 
                             transaction.Commit();
 
-                            MessageBox.Show("Pengguna berhasil dihapus beserta semua data terkaitnya.",
+                            MessageBox.Show("Pengguna berhasil dihapus beserta semua data terkaitnya\n(kunjungan, peminjaman, dan pengembalian).",
                                 "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             // Refresh grid
@@ -132,7 +159,7 @@ namespace ProjectAplikasiPerpustakaan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ERROR koneksi:\n" + ex.Message,
+                MessageBox.Show("ERROR koneksi database:\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

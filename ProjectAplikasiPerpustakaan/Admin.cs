@@ -122,23 +122,19 @@ namespace ProjectAplikasiPerpustakaan
         {
             if (dataGridView1.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Silakan pilih buku yang ingin diedit terlebih dahulu.",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Pilih buku yang ingin diedit.");
                 return;
             }
 
-            try
-            {
-                int idBuku = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_buku"].Value);
-                // EditBuku formEdit = new EditBuku(idBuku);
-                // formEdit.ShowDialog();
-                // LoadDataBuku(); // refresh setelah edit
+            int idBuku = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_buku"].Value);
 
-                MessageBox.Show("Fitur Edit Buku akan dibuat selanjutnya.", "Info");
-            }
-            catch (Exception ex)
+            EditBuku formEdit = new EditBuku(idBuku);
+            formEdit.ShowDialog();
+
+            if (formEdit.DialogResult == DialogResult.OK)
             {
-                MessageBox.Show("Terjadi kesalahan:\n" + ex.Message);
+                // Refresh data grid
+                LoadDataBuku();        // panggil method load kamu
             }
         }
 
@@ -146,8 +142,8 @@ namespace ProjectAplikasiPerpustakaan
         {
             try
             {
-                // Panggil form DaftarPengajuan dan kirimkan nama admin
-                btnKembali formPengajuan = new btnKembali(namaAdmin);
+                // Panggil form DaftarPengajuan dan kirimkan nama admin dan role admin
+                btnKembali formPengajuan = new btnKembali(namaAdmin, roleAdmin);
                 formPengajuan.ShowDialog();   // Gunakan ShowDialog agar setelah selesai bisa refresh
 
                 // Refresh daftar buku (stok mungkin berubah setelah persetujuan)
@@ -178,6 +174,24 @@ namespace ProjectAplikasiPerpustakaan
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Bisa digunakan nanti jika ada tombol di dalam grid (misalnya tombol Edit/Hapus per baris)
+        }
+
+        private void btnLaporan_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CetakLaporan formLaporan = new CetakLaporan();
+                formLaporan.ShowDialog();   // Modal dialog (disarankan)
+
+                // Optional: Refresh data buku setelah kembali dari laporan
+                // (karena laporan mungkin mempengaruhi stok atau data lainnya)
+                // LoadDataBuku();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal membuka form Laporan:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

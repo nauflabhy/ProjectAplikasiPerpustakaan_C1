@@ -14,10 +14,11 @@ namespace ProjectAplikasiPerpustakaan
         private readonly string namaAdmin;
         private readonly string roleAdmin;
 
-        public btnKembali(string namaAdmin)
+        public btnKembali(string namaAdmin, string roleAdmin)
         {
             InitializeComponent();
             this.namaAdmin = namaAdmin;
+            this.roleAdmin = roleAdmin;
         }
 
         private void DaftarPengajuan_Load(object sender, EventArgs e)
@@ -41,22 +42,30 @@ namespace ProjectAplikasiPerpustakaan
         private void LoadDataPengajuan()
         {
             string query = @"
-        SELECT 
+        SELECT
             pm.id_peminjaman,
-            p.nama_lengkap  AS Nama_Pengunjung,
-            p.nik           AS NIK,
-            p.no_hp         AS No_HP,
-            p.email         AS Email,
-            b.kode_buku     AS Kode_Buku,
-            b.judul         AS Judul_Buku,
-            b.pengarang     AS Pengarang,
+            p.nama_lengkap AS Nama_Pengunjung,
+            p.nik AS NIK,
+            p.no_hp AS No_HP,
+            p.email AS Email,
+            b.kode_buku AS Kode_Buku,
+            b.judul AS Judul_Buku,
+            b.pengarang AS Pengarang,
             pm.tanggal_ajuan AS Tanggal_Ajuan,
-            pm.status       AS Status
+            pm.tanggal_disetujui AS Tanggal_Disetujui,
+            pm.status AS Status,
+            pm.alasan_tolak AS Alasan_Tolak
         FROM PEMINJAMAN pm
         JOIN PENGUNJUNG p ON pm.id_pengunjung = p.id_pengunjung
         JOIN BUKU b ON pm.id_buku = b.id_buku
-        WHERE pm.status = 'menunggu'
-        ORDER BY pm.tanggal_ajuan DESC";
+        ORDER BY 
+            CASE 
+                WHEN pm.status = 'menunggu' THEN 1
+                WHEN pm.status = 'dipinjam' THEN 2
+                WHEN pm.status = 'ditolak' THEN 3
+                ELSE 4 
+            END,
+            pm.tanggal_ajuan DESC";
 
             try
             {
@@ -71,7 +80,7 @@ namespace ProjectAplikasiPerpustakaan
                     if (dataGridView1.Columns["id_peminjaman"] != null)
                         dataGridView1.Columns["id_peminjaman"].Visible = false;
 
-                    // Atur urutan kolom agar rapi
+                    // Atur urutan kolom
                     dataGridView1.Columns["Nama_Pengunjung"].DisplayIndex = 0;
                     dataGridView1.Columns["NIK"].DisplayIndex = 1;
                     dataGridView1.Columns["No_HP"].DisplayIndex = 2;
@@ -80,15 +89,45 @@ namespace ProjectAplikasiPerpustakaan
                     dataGridView1.Columns["Judul_Buku"].DisplayIndex = 5;
                     dataGridView1.Columns["Pengarang"].DisplayIndex = 6;
                     dataGridView1.Columns["Tanggal_Ajuan"].DisplayIndex = 7;
-                    dataGridView1.Columns["Status"].DisplayIndex = 8;
+                    dataGridView1.Columns["Tanggal_Disetujui"].DisplayIndex = 8;
+                    dataGridView1.Columns["Status"].DisplayIndex = 9;
+                    dataGridView1.Columns["Alasan_Tolak"].DisplayIndex = 10;
+
+                    WarnaiBarisBerdasarkanStatus();
                 }
 
-                this.Text = $"Daftar Pengajuan Peminjaman - {dtPengajuan.Rows.Count} Menunggu";
+                this.Text = $"Daftar Pengajuan Peminjaman - Total: {dtPengajuan.Rows.Count} pengajuan";
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal memuat daftar pengajuan:\n" + ex.Message,
                     "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void WarnaiBarisBerdasarkanStatus()
+        {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.Cells["Status"].Value == null) continue;
+
+                string status = row.Cells["Status"].Value.ToString().ToLower();
+
+                switch (status)
+                {
+                    case "menunggu":
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.LightYellow;
+                        break;
+                    case "dipinjam":
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                        break;
+                    case "ditolak":
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
+                        break;
+                    case "selesai":
+                        row.DefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
+                        break;
+                }
             }
         }
 
