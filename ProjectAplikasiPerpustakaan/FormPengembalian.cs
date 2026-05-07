@@ -58,11 +58,25 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
-        // ================== BUTTON KEMBALIKAN ==================
-        private void btnKembalikan_Click(object sender, EventArgs e)
+        // Hanya huruf, angka, dan spasi (rekomendasi untuk catatan)
+    private void AllowOnlyAlphanumeric_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (!char.IsLetterOrDigit(e.KeyChar) && 
+            !char.IsWhiteSpace(e.KeyChar) && 
+            e.KeyChar != '\b')   // \b = Backspace
         {
-        
+            e.Handled = true;   // Blokir input
         }
+    }
+
+    // Jika ingin lebih ketat (tanpa spasi)
+    private void AllowOnlyAlphanumericNoSpace_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (!char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '\b')
+        {
+            e.Handled = true;
+        }
+    }
 
         // ================== EVENT HANDLER LAIN (jika diperlukan) ==================
         private void cmbKondisiBuku_SelectedIndexChanged(object sender, EventArgs e)
@@ -158,10 +172,16 @@ namespace ProjectAplikasiPerpustakaan
             cmbKondisiBuku.Items.Clear();
             cmbKondisiBuku.Items.AddRange(new string[]
             {
-                "baik", "rusak ringan", "rusak berat", "hilang"
+        "baik", "rusak ringan", "rusak berat", "hilang"
             });
             cmbKondisiBuku.SelectedIndex = 0;
-        
+
+            // ============== BATASI INPUT txtCatatan ==============
+            txtCatatan.KeyPress += AllowOnlyAlphanumeric_KeyPress;
+
+            // Optional: Batasi jumlah karakter
+            txtCatatan.MaxLength = 200;   // maksimal 200 karakter
+
         }
 
         private void txtCatatan_TextChanged(object sender, EventArgs e)
