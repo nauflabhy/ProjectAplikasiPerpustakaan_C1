@@ -37,7 +37,7 @@ namespace ProjectAplikasiPerpustakaan
             txtJudul.KeyPress += AllowAlphanumericWithSpace;
             txtPengarang.KeyPress += AllowAlphanumericWithSpace;
             txtPenerbit.KeyPress += AllowAlphanumericWithSpace;
-            txtKategori.KeyPress += AllowAlphanumericWithSpace;
+            txtKategori.KeyPress += AllowOnlyLettersWithSpace;
             txtLokasi.KeyPress += AllowAlphanumericWithSpace;
 
             txtJudul.MaxLength = 200;
@@ -55,6 +55,16 @@ namespace ProjectAplikasiPerpustakaan
             txtStokTersedia.KeyPress += AllowOnlyNumbers;
             txtStokTotal.MaxLength = 5;
             txtStokTersedia.MaxLength = 5;
+        }
+
+        private void AllowOnlyLettersWithSpace(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
         }
 
         private void AllowAlphanumericWithSpace(object sender, KeyPressEventArgs e)
