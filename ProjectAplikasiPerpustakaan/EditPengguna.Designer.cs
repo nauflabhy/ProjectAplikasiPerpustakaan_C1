@@ -42,6 +42,7 @@
             this.txtPerguruan = new System.Windows.Forms.TextBox();
             this.txtNIK = new System.Windows.Forms.TextBox();
             this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnBatal = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -158,7 +159,7 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(895, 582);
+            this.btnUpdate.Location = new System.Drawing.Point(1033, 574);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(246, 77);
             this.btnUpdate.TabIndex = 13;
@@ -166,11 +167,22 @@
             this.btnUpdate.UseVisualStyleBackColor = true;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
+            // btnBatal
+            // 
+            this.btnBatal.Location = new System.Drawing.Point(703, 574);
+            this.btnBatal.Name = "btnBatal";
+            this.btnBatal.Size = new System.Drawing.Size(236, 77);
+            this.btnBatal.TabIndex = 14;
+            this.btnBatal.Text = "Batal";
+            this.btnBatal.UseVisualStyleBackColor = true;
+            this.btnBatal.Click += new System.EventHandler(this.btnBatal_Click);
+            // 
             // EditPengguna
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1799, 838);
+            this.Controls.Add(this.btnBatal);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.txtNIK);
             this.Controls.Add(this.txtPerguruan);
@@ -187,6 +199,7 @@
             this.Controls.Add(this.label1);
             this.Name = "EditPengguna";
             this.Text = "EditPengguna";
+            this.Load += new System.EventHandler(this.EditPengguna_Load_1);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -208,5 +221,6 @@
         private System.Windows.Forms.TextBox txtPerguruan;
         private System.Windows.Forms.TextBox txtNIK;
         private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnBatal;
     }
 }

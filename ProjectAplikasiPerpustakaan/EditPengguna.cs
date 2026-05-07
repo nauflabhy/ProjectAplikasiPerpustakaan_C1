@@ -17,11 +17,6 @@ namespace ProjectAplikasiPerpustakaan
             this.idUser = idUser;
         }
 
-        private void EditPengguna_Load(object sender, EventArgs e)
-        {
-            AmbilDataPengguna();
-        }
-
         // ================== AMBIL DATA DARI DB ==================
         private void AmbilDataPengguna()
         {
@@ -178,13 +173,6 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
-        // ================== TOMBOL BATAL ==================
-        private void btnBatal_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        // Event handler kosong
         private void txtUsername_TextChanged(object sender, EventArgs e) { }
         private void txtNamaLengkap_TextChanged(object sender, EventArgs e) { }
         private void txtNoHp_TextChanged(object sender, EventArgs e) { }
@@ -228,6 +216,74 @@ namespace ProjectAplikasiPerpustakaan
 
             // Panggil method yang sudah ada
             UpdatePengguna(username, namaLengkap, noHp, email, perguruan, nik);
+        }
+
+        private void btnBatal_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SetupInputRestrictions()
+        {
+            // Username → Huruf + Angka (tanpa spasi & simbol)
+            txtUsername.KeyPress += AllowOnlyAlphanumericNoSpace;
+
+            // Nama Lengkap → Huruf, Angka, Spasi
+            txtNamaLengkap.KeyPress += AllowAlphanumericWithSpace;
+
+            // NIK → Hanya Angka
+            txtNIK.KeyPress += AllowOnlyNumbers;
+
+            // No HP → Hanya Angka
+            txtNoHp.KeyPress += AllowOnlyNumbers;
+
+            // Perguruan → Huruf, Angka, Spasi
+            txtPerguruan.KeyPress += AllowAlphanumericWithSpace;
+
+            // Email → Huruf, Angka, @ . _ -
+            txtEmail.KeyPress += AllowEmailCharacters;
+
+            // Batasi panjang maksimal
+            txtUsername.MaxLength = 50;
+            txtNamaLengkap.MaxLength = 100;
+            txtNIK.MaxLength = 20;
+            txtNoHp.MaxLength = 15;
+            txtEmail.MaxLength = 80;
+            txtPerguruan.MaxLength = 100;
+        }
+
+        private void AllowOnlyAlphanumericNoSpace(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '\b')
+                e.Handled = true;
+        }
+
+        private void AllowAlphanumericWithSpace(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != '\b')
+                e.Handled = true;
+        }
+
+        private void AllowOnlyNumbers(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+                e.Handled = true;
+        }
+
+        private void AllowEmailCharacters(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) &&
+                "@._-".IndexOf(e.KeyChar) == -1 &&
+                e.KeyChar != '\b')
+                e.Handled = true;
+        }
+
+        private void EditPengguna_Load_1(object sender, EventArgs e)
+        {
+            AmbilDataPengguna();
+            SetupInputRestrictions();
         }
     }
 }
