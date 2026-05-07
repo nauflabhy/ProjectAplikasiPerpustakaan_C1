@@ -22,6 +22,7 @@ namespace ProjectAplikasiPerpustakaan
         private void EditBuku_Load(object sender, EventArgs e)
         {
             LoadDataBuku();
+            SetupInputRestrictions();
         }
 
         private void LoadDataBuku()
@@ -209,6 +210,63 @@ namespace ProjectAplikasiPerpustakaan
         private void txtLokasi_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void SetupInputRestrictions()
+        {
+            // Kode Buku → Huruf, Angka, dan "-"
+            txtKodeBuku.KeyPress += (s, e) =>
+            {
+                if (!char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '\b')
+                    e.Handled = true;
+            };
+            txtKodeBuku.MaxLength = 20;
+
+            // Judul Buku → Huruf, Angka, Spasi
+            txtJudulBuku.KeyPress += AllowAlphanumericWithSpace;
+            txtJudulBuku.MaxLength = 200;
+
+            // Pengarang → Huruf, Angka, Spasi
+            txtPengarang.KeyPress += AllowAlphanumericWithSpace;
+            txtPengarang.MaxLength = 100;
+
+            // Penerbit → Huruf, Angka, Spasi
+            txtPenerbit.KeyPress += AllowAlphanumericWithSpace;
+            txtPenerbit.MaxLength = 100;
+
+            // Tahun Terbit → Hanya Angka
+            txtTahunTerbit.KeyPress += AllowOnlyNumbers;
+            txtTahunTerbit.MaxLength = 4;
+
+            // Stok Total → Hanya Angka
+            txtStokTotal.KeyPress += AllowOnlyNumbers;
+            txtStokTotal.MaxLength = 5;
+
+            // Stok Tersedia → Hanya Angka
+            txtStokTersedia.KeyPress += AllowOnlyNumbers;
+            txtStokTersedia.MaxLength = 5;
+
+            // Lokasi → Huruf, Angka, Spasi
+            txtLokasi.KeyPress += AllowAlphanumericWithSpace;
+            txtLokasi.MaxLength = 50;
+        }
+
+        private void AllowAlphanumericWithSpace(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void AllowOnlyNumbers(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
         }
     }
 }
