@@ -36,12 +36,9 @@ namespace ProjectAplikasiPerpustakaan
                 conn.Open();
 
                 string query = @"
-                    SELECT 
-                        kode_buku, judul, pengarang, penerbit, 
-                        tahun_terbit, kategori, stok_total, 
-                        stok_tersedia, lokasi
-                    FROM BUKU 
-                    WHERE id_buku = @idBuku";
+            SELECT *
+            FROM vw_DetailBuku
+            WHERE id_buku = @idBuku";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -57,16 +54,16 @@ namespace ProjectAplikasiPerpustakaan
                             lblPenerbit.Text = reader["penerbit"].ToString();
                             lblTahunTerbit.Text = reader["tahun_terbit"].ToString();
                             lblKategori.Text = reader["kategori"].ToString();
-                            lblStokTotal.Text = reader["stok_total"].ToString();
                             lblStokTersedia.Text = reader["stok_tersedia"].ToString();
                             lblLokasi.Text = reader["lokasi"].ToString();
 
-                            // Warnai stok tersedia jika sedikit
                             int stok = Convert.ToInt32(reader["stok_tersedia"]);
+
                             if (stok <= 2)
                             {
                                 lblStokTersedia.ForeColor = Color.Red;
-                                lblStokTersedia.Font = new Font(lblStokTersedia.Font, FontStyle.Bold);
+                                lblStokTersedia.Font =
+                                    new Font(lblStokTersedia.Font, FontStyle.Bold);
                             }
                         }
                     }
@@ -74,8 +71,12 @@ namespace ProjectAplikasiPerpustakaan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat detail buku:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Gagal memuat detail buku:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
             finally
             {
