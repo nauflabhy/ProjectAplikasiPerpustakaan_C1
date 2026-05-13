@@ -63,22 +63,42 @@ namespace ProjectAplikasiPerpustakaan
         // ================== PENCARIAN OTOMATIS ==================
         private void CariBukuByKeyword()
         {
-            if (dtBuku == null) return;
-
             string keyword = txtCariBuku.Text.Trim();
 
-            if (string.IsNullOrEmpty(keyword))
+            try
             {
-                dataGridView1.DataSource = dtBuku;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd;
+
+                    if (string.IsNullOrEmpty(keyword))
+                    {
+                        cmd = new SqlCommand("sp_GetAllBuku", conn);
+                    }
+                    else
+                    {
+                        cmd = new SqlCommand("sp_SearchBuku", conn);
+                        cmd.Parameters.AddWithValue("@keyword", keyword);
+                    }
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        dtBuku = new DataTable();
+                        da.Fill(dtBuku);
+                        dataGridView1.DataSource = dtBuku;
+                    }
+
+                    if (dataGridView1.Columns["id_buku"] != null)
+                        dataGridView1.Columns["id_buku"].Visible = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DataView dv = dtBuku.DefaultView;
-                dv.RowFilter = $"judul LIKE '%{keyword}%' " +
-                               $"OR pengarang LIKE '%{keyword}%' " +
-                               $"OR kategori LIKE '%{keyword}%' " +
-                               $"OR kode_buku LIKE '%{keyword}%'";
-                dataGridView1.DataSource = dv;
+                MessageBox.Show("Gagal mencari buku:\n" + ex.Message);
             }
         }
 
