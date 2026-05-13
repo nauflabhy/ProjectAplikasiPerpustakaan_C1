@@ -261,11 +261,11 @@ namespace ProjectAplikasiPerpustakaan
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
+
                     string query = @"
-                SELECT COUNT(*) 
-                FROM PEMINJAMAN 
-                WHERE id_buku = @id_buku 
-                AND status IN ('menunggu', 'disetujui', 'dipinjam')";
+                SELECT COUNT(*)
+                FROM vw_BukuSedangDipinjam
+                WHERE id_buku = @id_buku";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -277,7 +277,7 @@ namespace ProjectAplikasiPerpustakaan
             }
             catch
             {
-                return true; // Jika error, anggap tidak aman untuk dihapus
+                return true;
             }
         }
 
