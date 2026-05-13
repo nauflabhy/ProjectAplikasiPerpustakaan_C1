@@ -310,7 +310,8 @@ namespace ProjectAplikasiPerpustakaan
                         {
                             dtBuku = new DataTable();
                             da.Fill(dtBuku);
-                            dataGridView1.DataSource = dtBuku;
+                            bsBuku.DataSource = dtBuku;
+                            dataGridView1.DataSource = bsBuku;
                         }
                     }
                 }
@@ -335,7 +336,7 @@ namespace ProjectAplikasiPerpustakaan
         private void btnTestDataInjection_Click(object sender, EventArgs e)
         {
             DialogResult konfirmasi = MessageBox.Show(
-        "Jalankan simulasi SQL Injection?\nSemua data buku akan diubah menjadi HACKED.",
+        "Jalankan simulasi SQL Injection?\nSemua data buku akan dimodifikasi.",
         "Test SQL Injection",
         MessageBoxButtons.YesNo,
         MessageBoxIcon.Warning);
@@ -348,23 +349,25 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
 
-                    // Simulasi SQL Injection
                     string injectedQuery = @"
-                UPDATE BUKU
-                SET 
-                    judul = 'HACKED',
-                    pengarang = 'HACKED',
-                    penerbit = 'HACKED',
-                    kategori = 'HACKED',
-                    lokasi = 'HACKED'";
+            UPDATE BUKU
+            SET
+                judul = 'HACKED',
+                pengarang = 'HACKED',
+                penerbit = 'HACKED',
+                tahun_terbit = 9999,
+                kategori = 'Fiksi',
+                stok_tersedia = 999,
+                lokasi = 'HACKED'
+            ";
 
                     using (SqlCommand cmd = new SqlCommand(injectedQuery, conn))
                     {
                         int result = cmd.ExecuteNonQuery();
 
                         MessageBox.Show(
-                            $"SQL Injection berhasil!\n{result} data berhasil dimodifikasi.",
-                            "Injection Success",
+                            $"{result} data berhasil dimodifikasi.",
+                            "SQL Injection Berhasil",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
                     }
@@ -381,10 +384,10 @@ namespace ProjectAplikasiPerpustakaan
         private void btnReset_Click(object sender, EventArgs e)
         {
             DialogResult konfirmasi = MessageBox.Show(
-        "Reset semua data buku ke kondisi awal?",
-        "Reset Database",
-        MessageBoxButtons.YesNo,
-        MessageBoxIcon.Question);
+         "Kembalikan data buku dari backup?",
+         "Restore Database",
+         MessageBoxButtons.YesNo,
+         MessageBoxIcon.Question);
 
             if (konfirmasi != DialogResult.Yes) return;
 
@@ -394,28 +397,38 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
 
-                    string resetQuery = @"
-                UPDATE BUKU
-                SET
-                    judul = CONCAT('Buku ', id_buku),
-                    pengarang = 'Unknown',
-                    penerbit = 'Perpustakaan',
-                    kategori = 'Fiksi',
-                    lokasi = 'Rak A'";
+                    string query = @"
+            UPDATE b
+            SET
+                b.kode_buku = bb.kode_buku,
+                b.judul = bb.judul,
+                b.pengarang = bb.pengarang,
+                b.penerbit = bb.penerbit,
+                b.tahun_terbit = bb.tahun_terbit,
+                b.kategori = bb.kategori,
+                b.stok_tersedia = bb.stok_tersedia,
+                b.lokasi = bb.lokasi
+            FROM BUKU b
+            INNER JOIN BUKU_BACKUP bb
+                ON b.id_buku = bb.id_buku";
 
-                    using (SqlCommand cmd = new SqlCommand(resetQuery, conn))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.ExecuteNonQuery();
+                        int result = cmd.ExecuteNonQuery();
+
+                        MessageBox.Show(
+                            $"{result} data berhasil dipulihkan.",
+                            "Restore Berhasil",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                 }
-
-                MessageBox.Show("Data berhasil di-reset.");
 
                 LoadDataBuku();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal reset data:\n" + ex.Message);
+                MessageBox.Show("Gagal restore:\n" + ex.Message);
             }
         }
     }
