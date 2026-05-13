@@ -48,11 +48,11 @@ namespace ProjectAplikasiPerpustakaan
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
+
                     string query = @"
-                        SELECT kode_buku, judul, pengarang, penerbit,
-                               tahun_terbit, kategori, stok_tersedia, lokasi
-                        FROM BUKU
-                        WHERE id_buku = @idBuku";
+                SELECT *
+                FROM vw_EditBuku
+                WHERE id_buku = @idBuku";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -70,16 +70,15 @@ namespace ProjectAplikasiPerpustakaan
                                 txtStokTersedia.Text = reader["stok_tersedia"].ToString();
                                 txtLokasi.Text = reader["lokasi"]?.ToString() ?? "";
 
-                                string kategori = reader["kategori"]?.ToString()?.Trim() ?? "";
+                                string kategori =
+                                    reader["kategori"]?.ToString()?.Trim() ?? "";
+
                                 if (!string.IsNullOrEmpty(kategori))
-                                {
                                     cmbKategori.SelectedItem = kategori;
-                                }
                             }
                             else
                             {
-                                MessageBox.Show($"Data buku dengan ID {idBuku} tidak ditemukan!",
-                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show("Data buku tidak ditemukan!");
                                 this.Close();
                             }
                         }
@@ -88,8 +87,7 @@ namespace ProjectAplikasiPerpustakaan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat data buku:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal memuat data buku:\n" + ex.Message);
             }
         }
 
