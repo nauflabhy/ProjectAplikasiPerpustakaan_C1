@@ -105,6 +105,8 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
+
+        // ================== Skenario SQL Injection ==================
         private void CariBukuByKeyword1()
         {
             string keyword = txtCariBuku.Text.Trim();
@@ -116,12 +118,12 @@ namespace ProjectAplikasiPerpustakaan
                     conn.Open();
 
                     string query = @"
-                SELECT *
-                FROM vw_AllBuku
-                WHERE judul LIKE '%" + keyword + @"%'
-                   OR pengarang LIKE '%" + keyword + @"%'
-                   OR kategori LIKE '%" + keyword + @"%'
-                   OR kode_buku LIKE '%" + keyword + @"%'";
+            SELECT *
+            FROM vw_DaftarBuku
+            WHERE judul LIKE '%" + keyword + @"%'
+               OR pengarang LIKE '%" + keyword + @"%'
+               OR kategori LIKE '%" + keyword + @"%'
+               OR kode_buku LIKE '%" + keyword + @"%'";
 
                     using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                     {
@@ -142,7 +144,7 @@ namespace ProjectAplikasiPerpustakaan
 
         private void txtCariBuku_TextChanged(object sender, EventArgs e)
         {
-            CariBukuByKeyword();
+            CariBukuByKeyword1();
         }
 
         private void btnCari_Click(object sender, EventArgs e)
@@ -270,5 +272,9 @@ namespace ProjectAplikasiPerpustakaan
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+       // ======================= SQL Injection ====================================
+
+
     }
 }
