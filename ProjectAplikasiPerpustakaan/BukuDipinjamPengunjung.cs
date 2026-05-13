@@ -39,11 +39,15 @@ namespace ProjectAplikasiPerpustakaan
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
-                using (SqlCommand cmd = new SqlCommand("sp_GetBukuDipinjamPengunjung", conn))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    conn.Open();
 
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    string query = @"
+                SELECT *
+                FROM vw_BukuDipinjamPengunjung
+                ORDER BY Jatuh_Tempo ASC";
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                     {
                         dtDipinjam = new DataTable();
                         da.Fill(dtDipinjam);
