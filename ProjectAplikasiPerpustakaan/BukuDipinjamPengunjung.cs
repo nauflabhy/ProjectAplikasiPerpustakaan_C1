@@ -36,32 +36,20 @@ namespace ProjectAplikasiPerpustakaan
         // ================== TAMPILKAN BUKU YANG SEDANG DIPINJAM ==================
         private void TampilkanBukuDipinjam()
         {
-            string query = @"
-                SELECT 
-                    pm.id_peminjaman,
-                    b.kode_buku AS Kode_Buku,
-                    b.judul AS Judul_Buku,
-                    b.pengarang AS Pengarang,
-                    pm.tanggal_pinjam AS Tanggal_Pinjam,
-                    pm.tanggal_jatuh_tempo AS Jatuh_Tempo,
-                    DATEDIFF(DAY, GETDATE(), pm.tanggal_jatuh_tempo) AS Sisa_Hari,
-                    pm.status AS Status
-                FROM PEMINJAMAN pm
-                JOIN PENGUNJUNG p ON pm.id_pengunjung = p.id_pengunjung
-                JOIN BUKU b ON pm.id_buku = b.id_buku
-                WHERE pm.status IN ('dipinjam', 'disetujui')
-                ORDER BY pm.tanggal_jatuh_tempo ASC";
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
-                using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                using (SqlCommand cmd = new SqlCommand("sp_GetBukuDipinjamPengunjung", conn))
                 {
-                    dtDipinjam = new DataTable();
-                    da.Fill(dtDipinjam);
-                    dataGridView1.DataSource = dtDipinjam;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    // Sembunyikan ID
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        dtDipinjam = new DataTable();
+                        da.Fill(dtDipinjam);
+                        dataGridView1.DataSource = dtDipinjam;
+                    }
+
                     if (dataGridView1.Columns["id_peminjaman"] != null)
                         dataGridView1.Columns["id_peminjaman"].Visible = false;
 
@@ -69,14 +57,18 @@ namespace ProjectAplikasiPerpustakaan
                         dataGridView1.Columns["Sisa_Hari"].HeaderText = "Sisa Hari";
 
                     WarnaiBarisBerdasarkanStatus();
-                }
 
-                this.Text = $"Buku Sedang Dipinjam - Total: {dtDipinjam.Rows.Count} buku";
+                    this.Text = $"Buku Sedang Dipinjam - Total: {dtDipinjam.Rows.Count} buku";
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat data buku yang dipinjam:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Gagal memuat data:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
 
