@@ -42,6 +42,8 @@
             this.btnCari = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.txtCariBuku = new System.Windows.Forms.TextBox();
+            this.btnTestDataInjection = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
@@ -164,11 +166,35 @@
             this.txtCariBuku.TabIndex = 11;
             this.txtCariBuku.TextChanged += new System.EventHandler(this.txtCariBuku_TextChanged);
             // 
+            // btnTestDataInjection
+            // 
+            this.btnTestDataInjection.BackColor = System.Drawing.Color.Red;
+            this.btnTestDataInjection.Location = new System.Drawing.Point(48, 864);
+            this.btnTestDataInjection.Name = "btnTestDataInjection";
+            this.btnTestDataInjection.Size = new System.Drawing.Size(153, 39);
+            this.btnTestDataInjection.TabIndex = 14;
+            this.btnTestDataInjection.Text = "Test";
+            this.btnTestDataInjection.UseVisualStyleBackColor = false;
+            this.btnTestDataInjection.Click += new System.EventHandler(this.btnTestDataInjection_Click);
+            // 
+            // btnReset
+            // 
+            this.btnReset.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnReset.Location = new System.Drawing.Point(258, 864);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(153, 39);
+            this.btnReset.TabIndex = 15;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
             // Admin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1735, 830);
+            this.ClientSize = new System.Drawing.Size(1735, 930);
+            this.Controls.Add(this.btnReset);
+            this.Controls.Add(this.btnTestDataInjection);
             this.Controls.Add(this.btnCari);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtCariBuku);
@@ -206,5 +232,7 @@
         private System.Windows.Forms.Button btnCari;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtCariBuku;
+        private System.Windows.Forms.Button btnTestDataInjection;
+        private System.Windows.Forms.Button btnReset;
     }
 }
