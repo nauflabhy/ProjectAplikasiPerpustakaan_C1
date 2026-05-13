@@ -91,10 +91,12 @@ namespace ProjectAplikasiPerpustakaan
         private void btnAjukanPeminjaman_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNIK.Text) ||
-        string.IsNullOrWhiteSpace(txtNamaLengkap.Text))
+                string.IsNullOrWhiteSpace(txtNamaLengkap.Text))
             {
                 MessageBox.Show("NIK dan Nama Lengkap wajib diisi!",
-                                "Validasi Gagal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    "Validasi Gagal",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return;
             }
 
@@ -104,79 +106,42 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
 
-                    int idPengunjung;
-
-                    // === 1. Cek apakah pengunjung sudah ada berdasarkan NIK ===
-                    string queryCek = "SELECT id_pengunjung FROM PENGUNJUNG WHERE nik = @nik";
-                    using (SqlCommand cmdCek = new SqlCommand(queryCek, conn))
+                    using (SqlCommand cmd = new SqlCommand("sp_AjukanPeminjamanLengkap", conn))
                     {
-                        cmdCek.Parameters.AddWithValue("@nik", txtNIK.Text.Trim());
-                        object result = cmdCek.ExecuteScalar();
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        if (result != null)
-                        {
-                            idPengunjung = Convert.ToInt32(result);
-                        }
-                        else
-                        {
-                            // === 2. Insert pengunjung baru ===
-                            string queryInsertPengunjung = @"
-                            INSERT INTO PENGUNJUNG 
-                            (id_user, nik, nama_lengkap, no_hp, email, perguruan)
-                            VALUES 
-                            (@id_user, @nik, @nama, @nohp, @email, @perguruan);
-                            SELECT SCOPE_IDENTITY();";
+                        cmd.Parameters.AddWithValue("@id_user",
+                            (object)this.idUser ?? DBNull.Value);
 
-                            using (SqlCommand cmdInsert = new SqlCommand(queryInsertPengunjung, conn))
-                            {
-                                // ✅ Tambahkan parameter id_user
-                                cmdInsert.Parameters.AddWithValue("@id_user", (object)this.idUser ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@nik", txtNIK.Text.Trim());
+                        cmd.Parameters.AddWithValue("@nama_lengkap", txtNamaLengkap.Text.Trim());
+                        cmd.Parameters.AddWithValue("@no_hp", txtNoHp.Text.Trim());
+                        cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
+                        cmd.Parameters.AddWithValue("@perguruan", txtPerguruan.Text.Trim());
+                        cmd.Parameters.AddWithValue("@id_buku", this.idBuku);
 
-                                cmdInsert.Parameters.AddWithValue("@nik", txtNIK.Text.Trim());
-                                cmdInsert.Parameters.AddWithValue("@nama", txtNamaLengkap.Text.Trim());
-                                cmdInsert.Parameters.AddWithValue("@nohp", txtNoHp.Text.Trim());
-                                cmdInsert.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
-                                cmdInsert.Parameters.AddWithValue("@perguruan", txtPerguruan.Text.Trim());
+                        cmd.ExecuteNonQuery();
 
-                                idPengunjung = Convert.ToInt32(cmdInsert.ExecuteScalar());
-                            }
-                        }
-                    }
+                        MessageBox.Show(
+                            "✅ Peminjaman berhasil diajukan!\nStatus: Menunggu Persetujuan Admin.",
+                            "Berhasil",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
 
-                    // === 3. Insert ke tabel PEMINJAMAN ===
-                    string queryPinjam = @"
-                INSERT INTO PEMINJAMAN 
-                (id_pengunjung, id_buku, tanggal_ajuan, status)
-                VALUES 
-                (@id_pengunjung, @id_buku, GETDATE(), 'menunggu')";
-
-                    using (SqlCommand cmdPinjam = new SqlCommand(queryPinjam, conn))
-                    {
-                        cmdPinjam.Parameters.AddWithValue("@id_pengunjung", idPengunjung);
-                        cmdPinjam.Parameters.AddWithValue("@id_buku", this.idBuku);
-
-                        int rowsAffected = cmdPinjam.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            MessageBox.Show("✅ Peminjaman berhasil diajukan!\nStatus: Menunggu Persetujuan Admin.",
-                                            "Berhasil", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            this.DialogResult = DialogResult.OK;
-                            this.Close();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Gagal menyimpan peminjaman.", "Gagal",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan saat mengajukan peminjaman:\n" + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Terjadi kesalahan:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
     }
