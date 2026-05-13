@@ -328,5 +328,92 @@ namespace ProjectAplikasiPerpustakaan
             CariBukuByKeyword();
             txtCariBuku.Focus();
         }
+
+        private void btnTestDataInjection_Click(object sender, EventArgs e)
+        {
+            DialogResult konfirmasi = MessageBox.Show(
+        "Jalankan simulasi SQL Injection?\nSemua data buku akan diubah menjadi HACKED.",
+        "Test SQL Injection",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Warning);
+
+            if (konfirmasi != DialogResult.Yes) return;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Simulasi SQL Injection
+                    string injectedQuery = @"
+                UPDATE BUKU
+                SET 
+                    judul = 'HACKED',
+                    pengarang = 'HACKED',
+                    penerbit = 'HACKED',
+                    kategori = 'HACKED',
+                    lokasi = 'HACKED'";
+
+                    using (SqlCommand cmd = new SqlCommand(injectedQuery, conn))
+                    {
+                        int result = cmd.ExecuteNonQuery();
+
+                        MessageBox.Show(
+                            $"SQL Injection berhasil!\n{result} data berhasil dimodifikasi.",
+                            "Injection Success",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                    }
+                }
+
+                LoadDataBuku();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menjalankan simulasi:\n" + ex.Message);
+            }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            DialogResult konfirmasi = MessageBox.Show(
+        "Reset semua data buku ke kondisi awal?",
+        "Reset Database",
+        MessageBoxButtons.YesNo,
+        MessageBoxIcon.Question);
+
+            if (konfirmasi != DialogResult.Yes) return;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string resetQuery = @"
+                UPDATE BUKU
+                SET
+                    judul = CONCAT('Buku ', id_buku),
+                    pengarang = 'Unknown',
+                    penerbit = 'Perpustakaan',
+                    kategori = 'Fiksi',
+                    lokasi = 'Rak A'";
+
+                    using (SqlCommand cmd = new SqlCommand(resetQuery, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Data berhasil di-reset.");
+
+                LoadDataBuku();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal reset data:\n" + ex.Message);
+            }
+        }
     }
 }
