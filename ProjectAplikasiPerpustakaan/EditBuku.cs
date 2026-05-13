@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing.Text;
 using System.Windows.Forms;
@@ -161,35 +162,38 @@ namespace ProjectAplikasiPerpustakaan
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = @"
-                        UPDATE BUKU
-                        SET kode_buku = @kode,
-                            judul = @judul,
-                            pengarang = @pengarang,
-                            penerbit = @penerbit,
-                            tahun_terbit = @tahun,
-                            kategori = @kategori,
-                            stok_tersedia = @stokTersedia,
-                            lokasi = @lokasi
-                        WHERE id_buku = @idBuku";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateBuku", conn))
                     {
-                        cmd.Parameters.AddWithValue("@kode", txtKodeBuku.Text.Trim().ToUpper());
-                        cmd.Parameters.AddWithValue("@judul", txtJudulBuku.Text.Trim());
-                        cmd.Parameters.AddWithValue("@pengarang", txtPengarang.Text.Trim());
-                        cmd.Parameters.AddWithValue("@penerbit", string.IsNullOrWhiteSpace(txtPenerbit.Text) ? (object)DBNull.Value : txtPenerbit.Text.Trim());
-                        cmd.Parameters.AddWithValue("@tahun", string.IsNullOrWhiteSpace(txtTahunTerbit.Text) ? (object)DBNull.Value : txtTahunTerbit.Text.Trim());
-                        cmd.Parameters.AddWithValue("@kategori", cmbKategori.SelectedItem.ToString());
-                        cmd.Parameters.AddWithValue("@stokTersedia", stok);
-                        cmd.Parameters.AddWithValue("@lokasi", string.IsNullOrWhiteSpace(txtLokasi.Text) ? (object)DBNull.Value : txtLokasi.Text.Trim());
+                        cmd.CommandType = CommandType.StoredProcedure;
+
                         cmd.Parameters.AddWithValue("@idBuku", idBuku);
+                        cmd.Parameters.AddWithValue("@kode",
+                            txtKodeBuku.Text.Trim().ToUpper());
+                        cmd.Parameters.AddWithValue("@judul",
+                            txtJudulBuku.Text.Trim());
+                        cmd.Parameters.AddWithValue("@pengarang",
+                            txtPengarang.Text.Trim());
+                        cmd.Parameters.AddWithValue("@penerbit",
+                            string.IsNullOrWhiteSpace(txtPenerbit.Text)
+                                ? (object)DBNull.Value
+                                : txtPenerbit.Text.Trim());
+                        cmd.Parameters.AddWithValue("@tahun",
+                            string.IsNullOrWhiteSpace(txtTahunTerbit.Text)
+                                ? (object)DBNull.Value
+                                : int.Parse(txtTahunTerbit.Text));
+                        cmd.Parameters.AddWithValue("@kategori",
+                            cmbKategori.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@stokTersedia", stok);
+                        cmd.Parameters.AddWithValue("@lokasi",
+                            string.IsNullOrWhiteSpace(txtLokasi.Text)
+                                ? (object)DBNull.Value
+                                : txtLokasi.Text.Trim());
 
                         int result = cmd.ExecuteNonQuery();
+
                         if (result > 0)
                         {
-                            MessageBox.Show("✅ Data buku berhasil diperbarui!", "Sukses",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Data buku berhasil diperbarui!");
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                         }
